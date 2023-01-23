@@ -65,6 +65,21 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
         ScrollView(.vertical, showsIndicators: false) {
             ScrollViewReader { proxy in
                 LazyVStack {
+                    //add pagination
+                    if messages.count == 0 {
+                        VStack(alignment: .center) {
+                            ProgressView()
+                                .padding()
+                            Text("Fetching messages")
+                        }
+                        .padding()
+                        
+                    }else if hasMore {
+                        ProgressView()
+                            .onAppear {
+                                self.fetchNextPage?()
+                            }
+                    }
                     ForEach(messages) { message in
                         let showDateheader = shouldShowDateHeader(
                             messages: messages,
@@ -99,21 +114,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                                 }
                             }
                     }
-                    //add pagination
-                    if messages.count == 0 {
-                        VStack(alignment: .center) {
-                            ProgressView()
-                                .padding()
-                            Text("Fetching messages")
-                        }
-                        .padding()
-                        
-                    }else if hasMore {
-                        ProgressView()
-                            .onAppear {
-                                self.fetchNextPage?()
-                            }
-                    }
+  
                     
                     Spacer()
                         .frame(height: inset.bottom)
