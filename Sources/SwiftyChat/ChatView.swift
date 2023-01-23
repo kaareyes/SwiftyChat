@@ -77,7 +77,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                     }else if hasMore {
                         ProgressView()
                             .onAppear {
-                                self.fetchNextPage?()
+                                //self.fetchNextPage?()
                             }
                     }
                     ForEach(messages) { message in
@@ -111,6 +111,8 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                             .onAppear {
                                 if message.id == self.messages.first?.id {
                                     self.reachedTop?()
+                                }else if message.id == self.messages.last?.id {
+                                    self.fetchNextPage?()
                                 }
                             }
                     }
