@@ -25,9 +25,11 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     private var dateHeaderTimeInterval: TimeInterval
     private var shouldShowGroupChatHeaders: Bool
     private var reachedTop: (() -> Void)?
-    
+    private var fetchNextPage: (() -> Void)?
+
     @Binding private var scrollTo: UUID?
     @Binding private var scrollToBottom: Bool
+    @Binding private var hasMore: Bool
     @State private var isKeyboardActive = false
     
     @State private var contentSizeThatFits: CGSize = .zero
@@ -97,6 +99,22 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                                 }
                             }
                     }
+                    //add pagination
+                    if messages.count == 0 {
+                        VStack(alignment: .center) {
+                            ProgressView()
+                                .padding()
+                            Text("Fetching messages")
+                        }
+                        .padding()
+                        
+                    }else if hasMore {
+                        ProgressView()
+                            .onAppear {
+                                self.fetchNextPage?()
+                            }
+                    }
+                    
                     Spacer()
                         .frame(height: inset.bottom)
                         .id("bottom")
@@ -230,12 +248,14 @@ public extension ChatView {
     init(
         messages: Binding<[Message]>,
         scrollToBottom: Binding<Bool> = .constant(false),
+        hasMore : Binding<Bool> = .constant(false),
         scrollTo: Binding<UUID?> = .constant(nil),
         dateHeaderTimeInterval: TimeInterval = 3600,
         shouldShowGroupChatHeaders: Bool = false,
         inputView: @escaping () -> AnyView,
         inset: EdgeInsets = .init(),
-        reachedTop: (() -> Void)? = nil
+        reachedTop: (() -> Void)? = nil,
+        fetchNextPage : (() -> Void)? = nil
     ) {
         _messages = messages
         self.inputView = inputView
@@ -248,6 +268,8 @@ public extension ChatView {
         self.dateHeaderTimeInterval = dateHeaderTimeInterval
         self.shouldShowGroupChatHeaders = shouldShowGroupChatHeaders
         self.reachedTop = reachedTop
+        self.fetchNextPage = fetchNextPage
+        _hasMore = hasMore
         _scrollTo = scrollTo
     }
 }
