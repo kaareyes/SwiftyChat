@@ -109,12 +109,27 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                         chatMessageCellContainer(in: geometry.size, with: message, with: shouldShowDisplayName)
                             .id(message.id)
                             .onAppear {
+                                print("chatMessageCellContainer message id ",message.id)
+                                print("chatMessageCellContainer self.messages id ",self.messages.last?.id)
                                 if message.id == self.messages.first?.id {
                                     self.reachedTop?()
                                 }else if message.id == self.messages.last?.id {
                                     self.fetchNextPage?()
                                 }
                             }
+                            .onAppear(){
+                                print("Fired directly after onDisappear")
+                                if message.id == self.messages.first?.id {
+                                    self.reachedTop?()
+                                }else if message.id == self.messages.last?.id {
+                                    self.fetchNextPage?()
+                                }
+                            }
+
+
+//                        if message.id == self.messages.last()?.id {
+//                            let _ = self.fetchNextPage?()
+//                        }
                     }
   
                     
