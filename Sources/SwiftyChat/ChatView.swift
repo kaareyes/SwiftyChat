@@ -63,7 +63,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     @ViewBuilder private func chatView(in geometry: GeometryProxy) -> some View {
         
         
-        List{
+        List(){
             ForEach(messages) { message in
                 let showDateheader = shouldShowDateHeader(
                     messages: messages,
@@ -78,11 +78,15 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                 if showDateheader {
                     if #available(iOS 15.0, *) {
                         Text(dateFormater.string(from: message.date))
+                            .frame(maxWidth: .infinity, alignment: .center)
                             .font(.subheadline)
                             .listRowSeparator(.hidden, edges: [.bottom])
                     } else {
+                        Spacer()
                         Text(dateFormater.string(from: message.date))
                             .font(.subheadline)
+                        Spacer()
+
                     }
 
                 }
@@ -132,9 +136,6 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                             }
                         }
                 }
-
-                
-                    
             }
             
             
