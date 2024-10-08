@@ -34,7 +34,7 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
         var result = AttributedString(attentionName)
         result.foregroundColor = .blue
 
-        return result +  AttributedString(text)
+        return result +  AttributedString(text.cleanHtml)
     }
     private var maxWidth: CGFloat {
         size.width * (UIDevice.isLandscape ? 0.6 : 0.75)
@@ -96,7 +96,7 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
                     .padding(cellStyle.textPadding)
 
             } else {
-                Text(text)
+                Text(text.cleanHtml)
                     .fontWeight(cellStyle.textStyle.fontWeight)
                     .lineLimit(showFullText ? nil : 20)
                     .modifier(EmojiModifier(text: text, defaultFont: cellStyle.textStyle.font))
