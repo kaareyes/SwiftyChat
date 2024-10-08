@@ -36,7 +36,7 @@ public class HtmlManager : NSObject {
 
     @available(iOS 15, *)
     public func createAttributeText(from html: String, defaultStyle: CommonTextStyle) -> AttributedString {
-        let elements = richTextElementFromHtml(html: html)
+        let elements = richTextElementFromHtml(html: html.replacingOccurrences(of: "&nbsp;", with: " ").replacingOccurrences(of: "\n", with: ""))
         var attributedString = AttributedString()
 
         // Define the base UIFont using the default font and font weight
@@ -70,6 +70,8 @@ public class HtmlManager : NSObject {
             } else if let styles = element.styles {
                 // Handle lists
                 if styles.bullet {
+                    // Track if it's the first bullet point
+                    var isFirstBullet = true
                     // Handle bullet list
                     for listItem in styles.bulletStyles {
                         var itemAttributedString = AttributedString()
@@ -101,7 +103,11 @@ public class HtmlManager : NSObject {
                             }
                         }
                         // Prepend bullet character
-                        let bulletText = "\u{2022} "
+                        var bulletText = "\t\u{2022}  "  // Tab added after the bullet
+                        if isFirstBullet {
+                            bulletText = "\n\t\u{2022}  "  // Add newline only before the first bullet
+                            isFirstBullet = false  // Set to false after first item
+                        }
                         var bulletString = AttributedString(bulletText)
                         bulletString.font = Font(baseUIFont)
                         bulletString.foregroundColor = defaultStyle.textColor
@@ -111,6 +117,8 @@ public class HtmlManager : NSObject {
                         attributedString.append(AttributedString("\n")) // Add newline after each list item
                     }
                 } else if styles.number {
+                    // Track if it's the first number
+                    var isFirstNumber = true
                     // Handle numbered list
                     for (index, listItem) in styles.numberStyles.enumerated() {
                         var itemAttributedString = AttributedString()
@@ -142,7 +150,11 @@ public class HtmlManager : NSObject {
                             }
                         }
                         // Prepend number and period
-                        let numberText = "\(index + 1). "
+                        var numberText = " \t\(index + 1).  "  // Tab added after the number
+                        if isFirstNumber {
+                            numberText = "\n \t\(index + 1).  "  // Add newline only before the first number
+                            isFirstNumber = false  // Set to false after first item
+                        }
                         var numberString = AttributedString(numberText)
                         numberString.font = Font(baseUIFont)
                         numberString.foregroundColor = defaultStyle.textColor
