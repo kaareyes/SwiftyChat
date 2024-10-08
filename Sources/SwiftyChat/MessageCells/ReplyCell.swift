@@ -105,9 +105,9 @@ internal struct ReplyCell<Message: ChatMessage>: View {
                         EmptyView()
                     }
                     if let text = reply.text, text.count > 0{
-                        Text(text)
+                        Text(text.cleanHtml)
                             .fontWeight(cellStyle.textStyle.fontWeight)
-                            .modifier(EmojiModifier(text: reply.text!, defaultFont: cellStyle.textStyle.font))
+                            .modifier(EmojiModifier(text: reply.text!.cleanHtml, defaultFont: cellStyle.textStyle.font))
                             .fixedSize(horizontal: false, vertical: true)
                             .foregroundColor(cellStyle.textStyle.textColor)
                             .padding(.top,10)

@@ -101,7 +101,7 @@ struct ReplyItemCell<Message: ChatMessage>: View {
                     .font(.system(size: 12))
                     .fontWeight(.medium)
                     .foregroundColor(.black)
-                Text(reply.text ?? "")
+                Text(reply.text?.cleanHtml ?? "")
                     .font(.system(size: 12, weight: .light))
                     .italic()
                     .padding(.top,5)
