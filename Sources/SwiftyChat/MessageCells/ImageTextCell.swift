@@ -99,7 +99,7 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
                 Text(text.cleanHtml)
                     .fontWeight(cellStyle.textStyle.fontWeight)
                     .lineLimit(showFullText ? nil : 20)
-                    .modifier(EmojiModifier(text: text, defaultFont: cellStyle.textStyle.font))
+                    .modifier(EmojiModifier(text: text.cleanHtml, defaultFont: cellStyle.textStyle.font))
                     .fixedSize(horizontal: false, vertical: true)
                     .foregroundColor(cellStyle.textStyle.textColor)
                     .padding(cellStyle.textPadding)

@@ -33,7 +33,7 @@ internal struct PdfTextCell<Message: ChatMessage>: View {
         var result = AttributedString(attentionName)
         result.foregroundColor = .blue
 
-        return result +  AttributedString(text)
+        return result +  AttributedString(text.cleanHtml)
     }
     
     private var hasText : Bool {
@@ -82,15 +82,15 @@ internal struct PdfTextCell<Message: ChatMessage>: View {
                 if #available(iOS 15, *) {
                     Text(formattedTagString)
                         .fontWeight(cellStyle.textStyle.fontWeight)
-                        .modifier(EmojiModifier(text: text, defaultFont: cellStyle.textStyle.font))
+                        .modifier(EmojiModifier(text: String(formattedTagString.characters), defaultFont: cellStyle.textStyle.font))
                         .fixedSize(horizontal: false, vertical: true)
                         .foregroundColor(cellStyle.textStyle.textColor)
                         .padding(cellStyle.textPadding)
 
                 } else {
-                    Text(text)
+                    Text(text.cleanHtml)
                         .fontWeight(cellStyle.textStyle.fontWeight)
-                        .modifier(EmojiModifier(text: text, defaultFont: cellStyle.textStyle.font))
+                        .modifier(EmojiModifier(text: text.cleanHtml, defaultFont: cellStyle.textStyle.font))
                         .fixedSize(horizontal: false, vertical: true)
                         .foregroundColor(cellStyle.textStyle.textColor)
                         .padding(cellStyle.textPadding)
