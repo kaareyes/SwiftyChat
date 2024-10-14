@@ -72,12 +72,19 @@ struct ReplyItemCell<Message: ChatMessage>: View {
                     .foregroundColor(cellStyle.textStyle.textColor)
                     .padding(.top,10)
 
-                Text(reply.text?.cleanHtml ?? "")
-                    .font(.system(size: 14, weight: .light))
-                    .italic()
-                    .foregroundColor(cellStyle.textStyle.textColor)
-
-                    .padding(.top,5)
+                if #available(iOS 15, *) {
+                    Text(reply.text?.phoneAndHtmlAttribute(style: cellStyle.textStyle) ?? "")
+                        .font(.system(size: 14, weight: .light))
+                        .italic()
+                        .foregroundColor(cellStyle.textStyle.textColor)
+                        .padding(.top,5)
+                } else {
+                    Text(reply.text?.cleanHtml ?? "")
+                        .font(.system(size: 14, weight: .light))
+                        .italic()
+                        .foregroundColor(cellStyle.textStyle.textColor)
+                        .padding(.top,5)
+                }
 
                 Text(reply.date)
                     .font(.system(size: 15, weight: .regular))
@@ -101,10 +108,19 @@ struct ReplyItemCell<Message: ChatMessage>: View {
                     .font(.system(size: 12))
                     .fontWeight(.medium)
                     .foregroundColor(.black)
-                Text(reply.text?.cleanHtml ?? "")
-                    .font(.system(size: 12, weight: .light))
-                    .italic()
-                    .padding(.top,5)
+                
+                if #available(iOS 15, *) {
+                    Text(reply.text?.phoneAndHtmlAttribute(style: cellStyle.textStyle) ?? "")
+                        .font(.system(size: 12, weight: .light))
+                        .italic()
+                        .padding(.top,5)
+                }else{
+                    Text(reply.text?.cleanHtml ?? "")
+                        .font(.system(size: 12, weight: .light))
+                        .italic()
+                        .padding(.top,5)
+
+                }
                 if let thumbnailURL = reply.thumbnailURL, !thumbnailURL.isEmpty {
                                   ImageCell(
                                       message: message,

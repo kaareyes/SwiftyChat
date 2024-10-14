@@ -207,11 +207,13 @@ internal struct TextCell<Message: ChatMessage>: View {
         var result = AttributedString(attentionName)
         result.foregroundColor = .blue
         
-        return result + self.applyPhoneNumberAttributes(to: text,style: cellStyle.textStyle)
+        
+        
+        return result + text.phoneAndHtmlAttribute(style: cellStyle.textStyle)
     }
     @available(iOS 15, *)
     private var attributedText: AttributedString {
-        return self.applyPhoneNumberAttributes(to: text,style: cellStyle.textStyle)
+        return text.phoneAndHtmlAttribute(style: cellStyle.textStyle)
     }
     
     @available(iOS 15, *)
@@ -219,11 +221,9 @@ internal struct TextCell<Message: ChatMessage>: View {
         
         VStack(alignment: .leading) {
             Text(formattedTagString)
-            //    .fontWeight(cellStyle.textStyle.fontWeight)
                 .lineLimit(showFullText ? nil : 20)
                 .modifier(EmojiModifier(text: String(formattedTagString.characters), defaultFont: cellStyle.textStyle.font))
                 .fixedSize(horizontal: false, vertical: true)
-            //    .foregroundColor(cellStyle.textStyle.textColor)
                 .padding(cellStyle.textPadding)
             if self.computeLineCount(for: String(formattedTagString.characters), with: cellStyle) > 20 {
                 showMore
@@ -293,69 +293,6 @@ internal struct TextCell<Message: ChatMessage>: View {
         
         
     }
-    
-    
-    @available(iOS 15, *)
-    func applyPhoneNumberAttributes(to inputText: String, style: CommonTextStyle) -> AttributedString {
-        var modifiedText = AttributedString()
-        
-        if inputText.containsEscapedHtml() {
-            // Treat it as plain text
-            modifiedText = AttributedString(inputText.cleanHtml)
-            // Apply default font and text color to the entire text
-            modifiedText.font = style.font
-            modifiedText.foregroundColor = style.textColor
-        } else {
-            // Detect if the input text contains HTML tags
-            let containsHTMLTags = inputText.containsHtml()
-            
-            // Handle HTML conversion
-            if containsHTMLTags {
-                // Convert HTML string to AttributedString
-                modifiedText = HtmlManager.shared.createAttributeText(from: inputText, defaultStyle: style)
-            } else {
-                // Treat it as plain text
-                modifiedText = AttributedString(inputText)
-                // Apply default font and text color to the entire text
-                modifiedText.font = style.font
-                modifiedText.foregroundColor = style.textColor
-            }
-        }
-        
-        // Phone number detection using NSDataDetector
-        do {
-            let detector = try NSDataDetector(types: NSTextCheckingResult.CheckingType.phoneNumber.rawValue)
-            
-            // Get plain string from the AttributedString to search for phone numbers
-            let plainString = String(modifiedText.characters)
-            
-            // Find matches for phone numbers in the plain string
-            let matches = detector.matches(in: plainString, options: [], range: NSRange(location: 0, length: plainString.utf16.count))
-            
-            for match in matches {
-                guard let range = Range(match.range, in: plainString) else { continue }
-                
-                // Apply the attributes to the AttributedString
-                if let attributedRange = modifiedText.range(of: plainString[range]) {
-                    // Set the attributes for the found phone number range
-                    modifiedText[attributedRange].foregroundColor = .blue
-                    modifiedText[attributedRange].underlineColor = .blue
-                    modifiedText[attributedRange].underlineStyle = .single
-                    
-                    // Set the link attribute
-                    let phoneNumber = String(plainString[range])
-                    if let phoneNumberURL = URL(string: "tel://\(phoneNumber)") {
-                        modifiedText[attributedRange].link = phoneNumberURL
-                    }
-                }
-            }
-        } catch {
-            print("Error creating data detector: \(error.localizedDescription)")
-        }
-        
-        return modifiedText
-    }
-    
 }
 
 internal struct AttributedTextPhone: Hashable {

@@ -33,7 +33,7 @@ internal struct PdfTextCell<Message: ChatMessage>: View {
         var result = AttributedString(attentionName)
         result.foregroundColor = .blue
 
-        return result +  AttributedString(text.cleanHtml)
+        return result +  text.phoneAndHtmlAttribute(style: cellStyle.textStyle)
     }
     
     private var hasText : Bool {
@@ -88,12 +88,25 @@ internal struct PdfTextCell<Message: ChatMessage>: View {
                         .padding(cellStyle.textPadding)
 
                 } else {
-                    Text(text.cleanHtml)
-                        .fontWeight(cellStyle.textStyle.fontWeight)
-                        .modifier(EmojiModifier(text: text.cleanHtml, defaultFont: cellStyle.textStyle.font))
-                        .fixedSize(horizontal: false, vertical: true)
-                        .foregroundColor(cellStyle.textStyle.textColor)
-                        .padding(cellStyle.textPadding)
+                    
+                    if #available(iOS 15.0, *) {
+                        Text(text.phoneAndHtmlAttribute(style: cellStyle.textStyle))
+                            .fontWeight(cellStyle.textStyle.fontWeight)
+                            .modifier(EmojiModifier(text: String(text.phoneAndHtmlAttribute(style: cellStyle.textStyle).characters), defaultFont: cellStyle.textStyle.font))
+                            .fixedSize(horizontal: false, vertical: true)
+                            .foregroundColor(cellStyle.textStyle.textColor)
+                            .padding(cellStyle.textPadding)
+
+                    }else {
+                        Text(text.cleanHtml)
+                            .fontWeight(cellStyle.textStyle.fontWeight)
+                            .modifier(EmojiModifier(text: text.cleanHtml, defaultFont: cellStyle.textStyle.font))
+                            .fixedSize(horizontal: false, vertical: true)
+                            .foregroundColor(cellStyle.textStyle.textColor)
+                            .padding(cellStyle.textPadding)
+
+                        
+                    }
                 }
                 HStack(){
 
