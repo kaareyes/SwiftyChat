@@ -64,7 +64,6 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
     }
     
     @ViewBuilder private var imageView: some View {
-        
         if case let ImageLoadingKind.local(uiImage) = imageLoadingType {
             let width = uiImage.size.width
             let height = uiImage.size.height
@@ -85,7 +84,6 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
     @ViewBuilder public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             imageView
-            
             if #available(iOS 15, *) {
                 Text(formattedTagString)
                     .fontWeight(cellStyle.textStyle.fontWeight)
@@ -94,7 +92,6 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .foregroundColor(cellStyle.textStyle.textColor)
                     .padding(cellStyle.textPadding)
-
             } else {
                 Text(text.cleanHtml)
                     .fontWeight(cellStyle.textStyle.fontWeight)
@@ -107,9 +104,7 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
             if self.computeLineCount(for: text, with: cellStyle) > 20 {
                 showMore
             }
-            
             HStack(){
-
                 if let status = actionStatus {
                     PriorityMessageViewStyle(priorityLevel: priority)
                         .padding(.bottom,10)
@@ -137,10 +132,8 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
             }
         }
             .background(cellStyle.cellBackgroundColor)
-            
             .clipShape(RoundedCornerShape(radius: cellStyle.cellCornerRadius, corners: cellStyle.cellRoundedCorners))
             .overlay(
-                
                 RoundedCornerShape(radius: cellStyle.cellCornerRadius, corners: cellStyle.cellRoundedCorners)
                 .stroke(
                     cellStyle.cellBorderColor,

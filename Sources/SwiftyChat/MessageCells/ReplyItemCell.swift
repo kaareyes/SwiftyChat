@@ -72,7 +72,7 @@ struct ReplyItemCell<Message: ChatMessage>: View {
                     .foregroundColor(cellStyle.textStyle.textColor)
                     .padding(.top,10)
 
-                Text(reply.text ?? "")
+                Text(reply.text?.cleanHtml ?? "")
                     .font(.system(size: 14, weight: .light))
                     .italic()
                     .foregroundColor(cellStyle.textStyle.textColor)

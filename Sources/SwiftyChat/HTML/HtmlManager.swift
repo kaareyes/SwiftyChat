@@ -208,7 +208,8 @@ public class HtmlManager : NSObject {
                 let tagContent = fragment.trimmingCharacters(in: CharacterSet(charactersIn: "<>")).lowercased()
                 let isClosingTag = tagContent.hasPrefix("/")
                 let tag = isClosingTag ? String(tagContent.dropFirst()) : tagContent
-                
+                print("tag == \(tag)")
+
                 if isClosingTag {
                     // Handling closing tags
                     switch tag {
@@ -266,6 +267,9 @@ public class HtmlManager : NSObject {
                         listItemStyleStack = [newStyle]
                     case "s", "del":
                         newStyle.strike = true
+                    case "p":
+                        // Handle <p> tag by adding a new line
+                        elements.append(RichTextElement(newLine: true))
                     default:
                         break
                     }
