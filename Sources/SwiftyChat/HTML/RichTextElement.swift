@@ -5,6 +5,8 @@
 //  Created by 1gz on 10/4/24.
 //
 
+import Foundation
+
 public class RichTextElement: Codable {
     public var text: String?
     public var styles: TextStyle?
@@ -39,6 +41,15 @@ public class RichTextElement: Codable {
 
 public class ListItemStyle : Codable {
     var elements: [RichTextElement] = []
+}
+
+public class InputTextStyle: ObservableObject {
+    @Published  var bold: Bool = false
+    @Published var italic: Bool = false
+    @Published  var underLine: Bool = false
+    @Published var strike: Bool = false
+    @Published  var bullet : Bool = false
+    @Published var number : Bool = false
 }
 
 public class TextStyle: Codable {

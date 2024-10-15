@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct BasicInputView: View {
-    
+    @StateObject private var textStyle = InputTextStyle()
     @Binding private var message: String
     @Binding private var isEditing: Bool
     private let placeholder: String
@@ -76,6 +76,7 @@ public struct BasicInputView: View {
     private var messageEditorView: some View {
         
         MultilineTextField(
+            textSystyle: self.textStyle,
             attributedText: self.internalAttributedMessage,
             placeholder: placeholder,
             isEditing: self.$isEditing

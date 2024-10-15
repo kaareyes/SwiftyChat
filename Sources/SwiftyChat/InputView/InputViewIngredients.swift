@@ -43,9 +43,9 @@ internal extension View {
 
 // MARK: - MultilineText
 public struct MultilineTextField: View {
+    @ObservedObject var textStyle: InputTextStyle
     @Binding private var attributedText: NSAttributedString
     @Binding private var isEditing: Bool
-
     @State private var contentSizeThatFits: CGSize = .zero
 
     private let placeholder: String
@@ -66,6 +66,7 @@ public struct MultilineTextField: View {
     }
 
     public init (
+        textSystyle: InputTextStyle,
         attributedText: Binding<NSAttributedString>,
         placeholder: String = "",
         isEditing: Binding<Bool>,
@@ -84,6 +85,7 @@ public struct MultilineTextField: View {
 
         self.onEditingChanged = onEditingChanged
         self.onCommit = onCommit
+        self.textStyle = textSystyle
     }
 
     public var body: some View {
