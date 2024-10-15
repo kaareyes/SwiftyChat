@@ -501,5 +501,12 @@ internal struct UITextViewWrapper: UIViewRepresentable {
 
             return false
         }
+        
+        func textViewDidChangeSelection(_ textView: UITextView) {
+            // Fires off every time the user changes the selection.
+            print(textView.selectedRange)
+
+        }
+        
     }
 }
