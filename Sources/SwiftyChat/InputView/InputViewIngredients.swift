@@ -90,6 +90,7 @@ public struct MultilineTextField: View {
 
     public var body: some View {
         AttributedText(
+            textStyle: textStyle,
             attributedText: $attributedText,
             isEditing: $isEditing,
             textAttributes: textAttributes,
@@ -115,6 +116,7 @@ public struct MultilineTextField: View {
 internal struct AttributedText: View {
     @Environment(\.textAttributes)
     var envTextAttributes: TextAttributes
+    @ObservedObject var textStyle: InputTextStyle
 
     @Binding var attributedText: NSAttributedString
     @Binding var isEditing: Bool
@@ -134,6 +136,7 @@ internal struct AttributedText: View {
 
         return GeometryReader { geometry in
             return UITextViewWrapper(
+                textSytle:self.textStyle,
                 attributedText: self.$attributedText,
                 isEditing: self.$isEditing,
                 sizeThatFits: self.$sizeThatFits,
@@ -151,6 +154,7 @@ internal struct AttributedText: View {
     }
 
     init(
+        textStyle: InputTextStyle,
         attributedText: Binding<NSAttributedString>,
         isEditing: Binding<Bool>,
         textAttributes: TextAttributes = .init(),
@@ -160,7 +164,7 @@ internal struct AttributedText: View {
     ) {
         self._attributedText = attributedText
         self._isEditing = isEditing
-
+        self.textStyle = textStyle
         self.textAttributes = textAttributes
 
         self.onLinkInteraction = onLinkInteraction
@@ -280,7 +284,7 @@ public struct TextAttributes {
 
 internal struct UITextViewWrapper: UIViewRepresentable {
     typealias UIViewType = UITextView
-
+    @ObservedObject var textStyle: InputTextStyle
     @Environment(\.textAttributes)
     var envTextAttributes: TextAttributes
 
@@ -297,6 +301,7 @@ internal struct UITextViewWrapper: UIViewRepresentable {
     private let onCommit: (() -> Void)?
 
     init(
+        textSytle : InputTextStyle,
         attributedText: Binding<NSAttributedString>,
         isEditing: Binding<Bool>,
         sizeThatFits: Binding<CGSize>,
@@ -315,6 +320,7 @@ internal struct UITextViewWrapper: UIViewRepresentable {
         self.onLinkInteraction = onLinkInteraction
         self.onEditingChanged = onEditingChanged
         self.onCommit = onCommit
+        self.textStyle = textSytle
     }
 
     func makeUIView(context: Context) -> UITextView {
@@ -397,6 +403,7 @@ internal struct UITextViewWrapper: UIViewRepresentable {
             isEditing: $isEditing,
             sizeThatFits: $sizeThatFits,
             maxContentSize: { self.maxSize },
+            textStyle:self.textStyle,
             onLinkInteraction: onLinkInteraction,
             onEditingChanged: onEditingChanged,
             onCommit: onCommit
@@ -427,12 +434,14 @@ internal struct UITextViewWrapper: UIViewRepresentable {
         private var onLinkInteraction: (((URL, UITextItemInteraction) -> Bool))?
         private var onEditingChanged: ((Bool) -> Void)?
         private var onCommit: (() -> Void)?
+        private var textStyle: InputTextStyle // Added to track text style
 
         init(
             attributedText: Binding<NSAttributedString>,
             isEditing: Binding<Bool>,
             sizeThatFits: Binding<CGSize>,
             maxContentSize: @escaping () -> CGSize,
+            textStyle: InputTextStyle, // Pass textStyle
             onLinkInteraction: ((URL, UITextItemInteraction) -> Bool)?,
             onEditingChanged: ((Bool) -> Void)?,
             onCommit: (() -> Void)?
@@ -442,6 +451,7 @@ internal struct UITextViewWrapper: UIViewRepresentable {
             self._sizeThatFits = sizeThatFits
 
             self.maxContentSize = maxContentSize
+            self.textStyle = textStyle // Assign the textStyle
 
             self.onLinkInteraction = onLinkInteraction
             self.onEditingChanged = onEditingChanged
@@ -458,6 +468,15 @@ internal struct UITextViewWrapper: UIViewRepresentable {
             )
         }
 
+        func textViewDidChangeSelection(_ textView: UITextView) {
+            applyBold(to: textView, with: textStyle)
+            applyUnderline(to: textView, with: textStyle)
+            applyBulletOrNumber(to: textView, with: textStyle)
+
+            // Update typing attributes for new text
+            applyBoldAndUnderline(to: textView, with: textStyle)
+        }
+
         func textViewDidBeginEditing(_ textView: UITextView) {
             DispatchQueue.main.async {
                 guard !self.isEditing else {
@@ -465,7 +484,6 @@ internal struct UITextViewWrapper: UIViewRepresentable {
                 }
                 self.isEditing = true
             }
-
             onEditingChanged?(false)
         }
 
@@ -476,7 +494,6 @@ internal struct UITextViewWrapper: UIViewRepresentable {
                 }
                 self.isEditing = false
             }
-
             onCommit?()
         }
 
@@ -504,11 +521,91 @@ internal struct UITextViewWrapper: UIViewRepresentable {
             return false
         }
         
-        func textViewDidChangeSelection(_ textView: UITextView) {
-            // Fires off every time the user changes the selection.
-            print(textView.selectedRange)
+        func applyBold(to textView: UITextView, with textStyle: InputTextStyle) {
+            if textStyle.bold {
+                let selectedRange = textView.selectedRange
+                guard selectedRange.length > 0 else { return }
 
+                let mutableAttributedText = NSMutableAttributedString(attributedString: textView.attributedText)
+                let boldFont = UIFont.boldSystemFont(ofSize: textView.font?.pointSize ?? 16)
+                mutableAttributedText.addAttribute(.font, value: boldFont, range: selectedRange)
+
+                textView.attributedText = mutableAttributedText
+                attributedText = mutableAttributedText
+
+                // Update the typing attributes to maintain bold styling
+                textView.typingAttributes = [.font: boldFont]
+            }
         }
+
+        func applyUnderline(to textView: UITextView, with textStyle: InputTextStyle) {
+            if textStyle.underLine {
+                let selectedRange = textView.selectedRange
+                guard selectedRange.length > 0 else { return }
+
+                let mutableAttributedText = NSMutableAttributedString(attributedString: textView.attributedText)
+                mutableAttributedText.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: selectedRange)
+
+                textView.attributedText = mutableAttributedText
+                attributedText = mutableAttributedText
+
+                // Update the typing attributes to maintain underline styling
+                var typingAttributes = textView.typingAttributes
+                typingAttributes[.underlineStyle] = NSUnderlineStyle.single.rawValue
+                textView.typingAttributes = typingAttributes
+            }
+        }
+        
+        func applyBoldAndUnderline(to textView: UITextView, with textStyle: InputTextStyle) {
+            var typingAttributes = textView.typingAttributes
+
+            if textStyle.bold {
+                let boldFont = UIFont.boldSystemFont(ofSize: textView.font?.pointSize ?? 16)
+                typingAttributes[.font] = boldFont
+            }
+            
+            if textStyle.underLine {
+                typingAttributes[.underlineStyle] = NSUnderlineStyle.single.rawValue
+            }
+
+            // Apply the combined typing attributes for new characters
+            textView.typingAttributes = typingAttributes
+        }
+
+        func applyBulletOrNumber(to textView: UITextView, with textStyle: InputTextStyle) {
+            // Check if either bullet or number is true, else do nothing
+            guard textStyle.bullet || textStyle.number else {
+                return
+            }
+            let mutableAttributedText = NSMutableAttributedString(attributedString: textView.attributedText)
+            // Split the text into lines
+            let textLines = textView.text.components(separatedBy: "\n")
+            let defaultFont = UIFont.systemFont(ofSize: textView.font?.pointSize ?? 16)
+            let boldFont = textStyle.bold ? UIFont.boldSystemFont(ofSize: textView.font?.pointSize ?? 16) : defaultFont
+            mutableAttributedText.mutableString.setString("") // Clear current text
+            for (index, line) in textLines.enumerated() {
+                var formattedLine: String
+                if textStyle.bullet {
+                    formattedLine = "• \(line)"
+                } else if textStyle.number {
+                    formattedLine = "\(index + 1). \(line)"
+                } else {
+                    formattedLine = line
+                }
+                // Prepare attributes for bold and underline if they are true
+                var attributes: [NSAttributedString.Key: Any] = [.font: boldFont]
+                // Apply underline if set in the textStyle
+                if textStyle.underLine {
+                    attributes[.underlineStyle] = NSUnderlineStyle.single.rawValue
+                }
+                // Create attributed string with the necessary styles
+                let attributedLine = NSAttributedString(string: formattedLine + "\n", attributes: attributes)
+                mutableAttributedText.append(attributedLine)
+            }
+            textView.attributedText = mutableAttributedText
+            attributedText = mutableAttributedText
+        }
+        
         
     }
 }

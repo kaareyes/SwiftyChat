@@ -12,14 +12,13 @@ public struct BasicInputView: View {
     @Binding private var message: String
     @Binding private var isEditing: Bool
     private let placeholder: String
-
+    
     @State private var contentSizeThatFits: CGSize = .zero
-
+    
     private var internalAttributedMessage: Binding<NSAttributedString> {
         Binding<NSAttributedString>(
             get: {
                 createAttributedMessage(from: self.message, with: nil)
-
             },
             set: { self.message = $0.string }
         )
@@ -33,6 +32,7 @@ public struct BasicInputView: View {
                 .foregroundColor: UIColor.label,
             ]
         )
+        
         if let names = names {
             for name in names {
                 let pattern = "@\(name)"
@@ -46,8 +46,6 @@ public struct BasicInputView: View {
                 }
             }
         }
-
-        
         return attributedString
     }
 
@@ -104,6 +102,17 @@ public struct BasicInputView: View {
         })
         .disabled(message.isEmpty)
     }
+    
+    private var boldButton: some View {
+        Button(action: {
+            textStyle.bold.toggle()  // Toggle the bold style
+            textStyle.underLine.toggle()  // Toggle the bold style
+        }) {
+            Text("Bold")
+                .foregroundColor(textStyle.bold ? .blue : .gray)
+        }
+        .padding(.trailing, 8)
+    }
 
     public var body: some View {
         VStack {
@@ -111,6 +120,8 @@ public struct BasicInputView: View {
             HStack {
                 self.messageEditorView
                 self.sendButton
+                self.boldButton
+
             }
         }
     }
