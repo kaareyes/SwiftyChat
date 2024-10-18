@@ -42,25 +42,6 @@ public class RichTextElement: Codable {
 public class ListItemStyle : Codable {
     var elements: [RichTextElement] = []
 }
-
-public class InputTextStyle: ObservableObject {
-    @Published  var bold: Bool = false
-    @Published var italic: Bool = false
-    @Published  var underLine: Bool = false
-    @Published var strike: Bool = false
-    @Published  var bullet : Bool = false
-    @Published var number : Bool = false
-    
-    public init(bold: Bool = false, italic: Bool = false, underLine: Bool = false, strike: Bool = false, bullet: Bool = false, number: Bool = false) {
-        self.bold = bold
-        self.italic = italic
-        self.underLine = underLine
-        self.strike = strike
-        self.bullet = bullet
-        self.number = number
-    }
-}
-
 public class TextStyle: Codable {
     var bold: Bool = false
     var italic: Bool = false

@@ -8,7 +8,6 @@
 import SwiftUI
 
 public struct BasicInputView: View {
-    @StateObject private var textStyle = InputTextStyle()
     @Binding private var message: String
     @Binding private var isEditing: Bool
     private let placeholder: String
@@ -105,17 +104,6 @@ public struct BasicInputView: View {
         })
         .disabled(message.isEmpty)
     }
-    
-    private var boldButton: some View {
-        Button(action: {
-            textStyle.bold.toggle()  // Toggle the bold style
-            textStyle.underLine.toggle()  // Toggle the bold style
-        }) {
-            Text("Bold")
-                .foregroundColor(textStyle.bold ? .blue : .gray)
-        }
-        .padding(.trailing, 8)
-    }
 
     public var body: some View {
         VStack {
@@ -123,7 +111,6 @@ public struct BasicInputView: View {
             HStack {
                 self.messageEditorView
                 self.sendButton
-                self.boldButton
 
             }
         }
