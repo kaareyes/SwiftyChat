@@ -71,11 +71,16 @@ public struct BasicInputView: View {
     }
 
     private var messageEditorView: some View {
-        
         MultilineTextField(
             attributedText: self.internalAttributedMessage,
             placeholder: placeholder,
-            isEditing: self.$isEditing
+            isEditing: self.$isEditing,
+            onTextViewDidChangeSelection: { textView in
+                print(textView.text)
+            },
+            onTextView: { textView ,range , text in
+                
+            }
         )
         .onPreferenceChange(ContentSizeThatFitsKey.self) {
             self.contentSizeThatFits = $0
