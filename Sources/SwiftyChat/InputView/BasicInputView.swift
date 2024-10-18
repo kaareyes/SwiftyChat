@@ -32,7 +32,6 @@ public struct BasicInputView: View {
                 .foregroundColor: UIColor.label,
             ]
         )
-        
         if let names = names {
             for name in names {
                 let pattern = "@\(name)"
@@ -74,7 +73,6 @@ public struct BasicInputView: View {
     private var messageEditorView: some View {
         
         MultilineTextField(
-            textSystyle: self.textStyle,
             attributedText: self.internalAttributedMessage,
             placeholder: placeholder,
             isEditing: self.$isEditing
