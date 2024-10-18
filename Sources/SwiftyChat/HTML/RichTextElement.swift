@@ -50,6 +50,15 @@ public class InputTextStyle: ObservableObject {
     @Published var strike: Bool = false
     @Published  var bullet : Bool = false
     @Published var number : Bool = false
+    
+    public init(bold: Bool, italic: Bool, underLine: Bool, strike: Bool, bullet: Bool, number: Bool) {
+        self.bold = bold
+        self.italic = italic
+        self.underLine = underLine
+        self.strike = strike
+        self.bullet = bullet
+        self.number = number
+    }
 }
 
 public class TextStyle: Codable {
