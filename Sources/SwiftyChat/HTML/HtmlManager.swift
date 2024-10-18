@@ -318,8 +318,6 @@ public class HtmlManager : NSObject {
         return elements
     }
     
-    
-    
-    
+
     
 }

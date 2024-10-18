@@ -45,7 +45,6 @@ internal extension View {
 public struct MultilineTextField: View {
     @Binding private var attributedText: NSAttributedString
     @Binding private var isEditing: Bool
-
     @State private var contentSizeThatFits: CGSize = .zero
 
     private let placeholder: String
@@ -53,6 +52,8 @@ public struct MultilineTextField: View {
 
     private let onEditingChanged: ((Bool) -> Void)?
     private let onCommit: (() -> Void)?
+    private var onTextViewDidChangeSelection: ((UITextView) -> Void)?
+    private var onTextView: ((_ textView : UITextView, _ range: NSRange,_ text: String) -> Void)?
     private var placeholderInset: EdgeInsets {
         .init(top: 8.0, leading: 8.0, bottom: 8.0, trailing: 8.0)
     }
@@ -71,7 +72,9 @@ public struct MultilineTextField: View {
         isEditing: Binding<Bool>,
         textAttributes: TextAttributes = .init(),
         onEditingChanged: ((Bool) -> Void)? = nil,
-        onCommit: (() -> Void)? = nil
+        onCommit: (() -> Void)? = nil,
+        onTextViewDidChangeSelection: ((UITextView) -> Void)? = nil,
+        onTextView: ((_ textView : UITextView, _ range: NSRange,_ text: String) -> Void)?
     ) {
         self._attributedText = attributedText
         self.placeholder = placeholder
@@ -84,6 +87,9 @@ public struct MultilineTextField: View {
 
         self.onEditingChanged = onEditingChanged
         self.onCommit = onCommit
+        self.onTextViewDidChangeSelection = onTextViewDidChangeSelection
+        self.onTextView = onTextView
+        
     }
 
     public var body: some View {
@@ -92,7 +98,9 @@ public struct MultilineTextField: View {
             isEditing: $isEditing,
             textAttributes: textAttributes,
             onEditingChanged: onEditingChanged,
-            onCommit: onCommit
+            onCommit: onCommit,
+            onTextViewDidChangeSelection: self.onTextViewDidChangeSelection,
+            onTextView: self.onTextView
         )
         .onPreferenceChange(ContentSizeThatFitsKey.self) {
             self.contentSizeThatFits = $0
@@ -124,6 +132,8 @@ internal struct AttributedText: View {
     private let onLinkInteraction: (((URL, UITextItemInteraction) -> Bool))?
     private let onEditingChanged: ((Bool) -> Void)?
     private let onCommit: (() -> Void)?
+    private var onTextViewDidChangeSelection: ((UITextView) -> Void)?
+    private var onTextView: ((_ textView : UITextView, _ range: NSRange,_ text: String) -> Void)?
 
     var body: some View {
         let textAttributes = self.textAttributes
@@ -139,7 +149,9 @@ internal struct AttributedText: View {
                 textAttributes: textAttributes,
                 onLinkInteraction: self.onLinkInteraction,
                 onEditingChanged: self.onEditingChanged,
-                onCommit: self.onCommit
+                onCommit: self.onCommit,
+                onTextViewDidChangeSelection:self.onTextViewDidChangeSelection,
+                onTextView: self.onTextView
             )
             .preference(
                 key: ContentSizeThatFitsKey.self,
@@ -154,16 +166,18 @@ internal struct AttributedText: View {
         textAttributes: TextAttributes = .init(),
         onLinkInteraction: ((URL, UITextItemInteraction) -> Bool)? = nil,
         onEditingChanged: ((Bool) -> Void)? = nil,
-        onCommit: (() -> Void)? = nil
+        onCommit: (() -> Void)? = nil,
+        onTextViewDidChangeSelection: ((UITextView) -> Void)? = nil,
+        onTextView: ((_ textView : UITextView, _ range: NSRange,_ text: String) -> Void)?
     ) {
         self._attributedText = attributedText
         self._isEditing = isEditing
-
         self.textAttributes = textAttributes
-
         self.onLinkInteraction = onLinkInteraction
         self.onEditingChanged = onEditingChanged
         self.onCommit = onCommit
+        self.onTextViewDidChangeSelection = onTextViewDidChangeSelection
+        self.onTextView = onTextView
     }
 }
 
@@ -278,7 +292,6 @@ public struct TextAttributes {
 
 internal struct UITextViewWrapper: UIViewRepresentable {
     typealias UIViewType = UITextView
-
     @Environment(\.textAttributes)
     var envTextAttributes: TextAttributes
 
@@ -293,6 +306,8 @@ internal struct UITextViewWrapper: UIViewRepresentable {
     private let onLinkInteraction: (((URL, UITextItemInteraction) -> Bool))?
     private let onEditingChanged: ((Bool) -> Void)?
     private let onCommit: (() -> Void)?
+    private var onTextViewDidChangeSelection: ((UITextView) -> Void)?
+    private var onTextView: ((_ textView : UITextView, _ range: NSRange,_ text: String) -> Void)?
 
     init(
         attributedText: Binding<NSAttributedString>,
@@ -302,7 +317,9 @@ internal struct UITextViewWrapper: UIViewRepresentable {
         textAttributes: TextAttributes = .init(),
         onLinkInteraction: ((URL, UITextItemInteraction) -> Bool)? = nil,
         onEditingChanged: ((Bool) -> Void)? = nil,
-        onCommit: (() -> Void)? = nil
+        onCommit: (() -> Void)? = nil,
+        onTextViewDidChangeSelection: ((UITextView) -> Void)?,
+        onTextView: ((_ textView : UITextView, _ range: NSRange,_ text: String) -> Void)?
     ) {
         self._attributedText = attributedText
         self._isEditing = isEditing
@@ -313,6 +330,8 @@ internal struct UITextViewWrapper: UIViewRepresentable {
         self.onLinkInteraction = onLinkInteraction
         self.onEditingChanged = onEditingChanged
         self.onCommit = onCommit
+        self.onTextViewDidChangeSelection = onTextViewDidChangeSelection
+        self.onTextView = onTextView
     }
 
     func makeUIView(context: Context) -> UITextView {
@@ -397,7 +416,9 @@ internal struct UITextViewWrapper: UIViewRepresentable {
             maxContentSize: { self.maxSize },
             onLinkInteraction: onLinkInteraction,
             onEditingChanged: onEditingChanged,
-            onCommit: onCommit
+            onCommit: onCommit,
+            onTextViewDidChangeSelection: onTextViewDidChangeSelection,
+            onTextView: onTextView
         )
     }
 
@@ -425,6 +446,17 @@ internal struct UITextViewWrapper: UIViewRepresentable {
         private var onLinkInteraction: (((URL, UITextItemInteraction) -> Bool))?
         private var onEditingChanged: ((Bool) -> Void)?
         private var onCommit: (() -> Void)?
+        private var onTextViewDidChangeSelection: ((UITextView) -> Void)?
+        private var onTextView: ((_ textView : UITextView, _ range: NSRange,_ text: String) -> Void)?
+        
+        
+        /*
+         textView(
+            _ textView: UITextView,
+            shouldChangeTextIn range: NSRange,
+            replacementText text: String
+        )
+         */
 
         init(
             attributedText: Binding<NSAttributedString>,
@@ -433,7 +465,9 @@ internal struct UITextViewWrapper: UIViewRepresentable {
             maxContentSize: @escaping () -> CGSize,
             onLinkInteraction: ((URL, UITextItemInteraction) -> Bool)?,
             onEditingChanged: ((Bool) -> Void)?,
-            onCommit: (() -> Void)?
+            onCommit: (() -> Void)?,
+            onTextViewDidChangeSelection: ((UITextView) -> Void)?,
+            onTextView: ((_ textView : UITextView, _ range: NSRange,_ text: String) -> Void)?
         ) {
             self._attributedText = attributedText
             self._isEditing = isEditing
@@ -444,6 +478,8 @@ internal struct UITextViewWrapper: UIViewRepresentable {
             self.onLinkInteraction = onLinkInteraction
             self.onEditingChanged = onEditingChanged
             self.onCommit = onCommit
+            self.onTextViewDidChangeSelection = onTextViewDidChangeSelection
+            self.onTextView = onTextView
         }
 
         func textViewDidChange(_ uiView: UITextView) {
@@ -456,6 +492,11 @@ internal struct UITextViewWrapper: UIViewRepresentable {
             )
         }
 
+        func textViewDidChangeSelection(_ textView: UITextView) {
+            // create closure when trigger this
+            onTextViewDidChangeSelection?(textView)
+        }
+
         func textViewDidBeginEditing(_ textView: UITextView) {
             DispatchQueue.main.async {
                 guard !self.isEditing else {
@@ -463,7 +504,6 @@ internal struct UITextViewWrapper: UIViewRepresentable {
                 }
                 self.isEditing = true
             }
-
             onEditingChanged?(false)
         }
 
@@ -474,7 +514,6 @@ internal struct UITextViewWrapper: UIViewRepresentable {
                 }
                 self.isEditing = false
             }
-
             onCommit?()
         }
 
@@ -492,6 +531,7 @@ internal struct UITextViewWrapper: UIViewRepresentable {
             shouldChangeTextIn range: NSRange,
             replacementText text: String
         ) -> Bool {
+            onTextView?(textView, range, text)
             guard let onCommit = self.onCommit, text == "\n" else {
                 return true
             }
@@ -501,12 +541,5 @@ internal struct UITextViewWrapper: UIViewRepresentable {
 
             return false
         }
-        
-        func textViewDidChangeSelection(_ textView: UITextView) {
-            // Fires off every time the user changes the selection.
-            print(textView.selectedRange)
-
-        }
-        
     }
 }
