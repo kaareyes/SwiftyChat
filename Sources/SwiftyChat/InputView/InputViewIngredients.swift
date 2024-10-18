@@ -52,6 +52,8 @@ public struct MultilineTextField: View {
 
     private let onEditingChanged: ((Bool) -> Void)?
     private let onCommit: (() -> Void)?
+    private var onTextViewDidChangeSelection: ((UITextView) -> Void)?
+
     private var placeholderInset: EdgeInsets {
         .init(top: 8.0, leading: 8.0, bottom: 8.0, trailing: 8.0)
     }
@@ -70,7 +72,8 @@ public struct MultilineTextField: View {
         isEditing: Binding<Bool>,
         textAttributes: TextAttributes = .init(),
         onEditingChanged: ((Bool) -> Void)? = nil,
-        onCommit: (() -> Void)? = nil
+        onCommit: (() -> Void)? = nil,
+        onTextViewDidChangeSelection: ((UITextView) -> Void)? = nil
     ) {
         self._attributedText = attributedText
         self.placeholder = placeholder
@@ -83,6 +86,8 @@ public struct MultilineTextField: View {
 
         self.onEditingChanged = onEditingChanged
         self.onCommit = onCommit
+        self.onTextViewDidChangeSelection = onTextViewDidChangeSelection
+        
     }
 
     public var body: some View {
@@ -155,7 +160,8 @@ internal struct AttributedText: View {
         textAttributes: TextAttributes = .init(),
         onLinkInteraction: ((URL, UITextItemInteraction) -> Bool)? = nil,
         onEditingChanged: ((Bool) -> Void)? = nil,
-        onCommit: (() -> Void)? = nil
+        onCommit: (() -> Void)? = nil,
+        onTextViewDidChangeSelection: ((UITextView) -> Void)? = nil
     ) {
         self._attributedText = attributedText
         self._isEditing = isEditing
@@ -164,6 +170,7 @@ internal struct AttributedText: View {
         self.onLinkInteraction = onLinkInteraction
         self.onEditingChanged = onEditingChanged
         self.onCommit = onCommit
+        self.onTextViewDidChangeSelection = onTextViewDidChangeSelection
     }
 }
 
