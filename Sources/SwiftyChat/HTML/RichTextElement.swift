@@ -51,7 +51,7 @@ public class InputTextStyle: ObservableObject {
     @Published  var bullet : Bool = false
     @Published var number : Bool = false
     
-    public init(bold: Bool, italic: Bool, underLine: Bool, strike: Bool, bullet: Bool, number: Bool) {
+    public init(bold: Bool = false, italic: Bool = false, underLine: Bool = false, strike: Bool = false, bullet: Bool = false, number: Bool = false) {
         self.bold = bold
         self.italic = italic
         self.underLine = underLine
