@@ -85,7 +85,7 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
         VStack(alignment: .leading, spacing: 0) {
             imageView
             if #available(iOS 15, *) {
-                Text(formattedTagString)
+                Text(formattedTagString + " helloworl#d")
                     .fontWeight(cellStyle.textStyle.fontWeight)
                     .lineLimit(showFullText ? nil : 20)
                     .modifier(EmojiModifier(text: String(formattedTagString.characters), defaultFont: cellStyle.textStyle.font))
@@ -94,7 +94,7 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
                     .padding(cellStyle.textPadding)
             } else {
                 if #available(iOS 15.0, *) {
-                    Text(text.phoneAndHtmlAttribute(style: cellStyle.textStyle))
+                    Text("\(text) helloworl#d".phoneAndHtmlAttribute(style: cellStyle.textStyle))
                         .fontWeight(cellStyle.textStyle.fontWeight)
                         .lineLimit(showFullText ? nil : 20)
                         .modifier(EmojiModifier(text: String(text.phoneAndHtmlAttribute(style: cellStyle.textStyle).characters), defaultFont: cellStyle.textStyle.font))
