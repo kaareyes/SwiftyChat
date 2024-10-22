@@ -41,7 +41,8 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     @State private var isKeyboardActive = false
     @State private var contentSizeThatFits: CGSize = .zero
     @Binding private var additionalHeight : CGFloat
-    
+    @State private var inputBarBottom : CGFloat = 12.0
+
     
     private var messageEditorHeight: CGFloat {
         min(
@@ -73,7 +74,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                         contentSizeThatFits = $0
                     }
                     .frame(height: messageEditorHeight)
-                    .padding(.bottom, 12)
+                    .padding(.bottom, inputBarBottom)
                 
                 PIPVideoCell<Message>()
             }
@@ -399,7 +400,8 @@ public extension ChatView {
     ///                                 (disabled by default)
     ///   - inputView: inputView view to provide message
     ///
-    init(additionalHeight : Binding<CGFloat> = .constant(0.0),
+    init(inputBarBottom : Binding<CGFloat> = .constant(12.0),
+         additionalHeight : Binding<CGFloat> = .constant(0.0),
          isFetching : Binding<Bool> = .constant(false),
          inverted : Bool = false,
          messages: Binding<[Message]>,
