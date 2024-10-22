@@ -41,7 +41,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     @State private var isKeyboardActive = false
     @State private var contentSizeThatFits: CGSize = .zero
     @Binding private var additionalHeight : CGFloat
-    @State private var inputBarBottom : CGFloat = 12.0
+    @Binding private var inputBarBottom : CGFloat
 
     
     private var messageEditorHeight: CGFloat {
@@ -437,6 +437,7 @@ public extension ChatView {
         _hasMore = hasMore
         self.inverted = inverted
         _isFetching = isFetching
+        self._inputBarBottom = inputBarBottom
     }
 }
 
