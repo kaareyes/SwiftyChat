@@ -85,12 +85,10 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
         VStack(alignment: .leading, spacing: 0) {
             imageView
             if #available(iOS 15, *) {
-                Text(formattedTagString + " helloworl#d")
-                    .fontWeight(cellStyle.textStyle.fontWeight)
+                Text(formattedTagString)
                     .lineLimit(showFullText ? nil : 20)
                     .modifier(EmojiModifier(text: String(formattedTagString.characters), defaultFont: cellStyle.textStyle.font))
                     .fixedSize(horizontal: false, vertical: true)
-                    .foregroundColor(cellStyle.textStyle.textColor)
                     .padding(cellStyle.textPadding)
                 if self.computeLineCount(for:String(formattedTagString.characters), with: cellStyle) > 20 {
                     showMore
@@ -98,11 +96,9 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
             } else {
                 if #available(iOS 15.0, *) {
                     Text(text.phoneAndHtmlAttribute(style: cellStyle.textStyle))
-                        .fontWeight(cellStyle.textStyle.fontWeight)
                         .lineLimit(showFullText ? nil : 20)
                         .modifier(EmojiModifier(text: String(text.phoneAndHtmlAttribute(style: cellStyle.textStyle).characters), defaultFont: cellStyle.textStyle.font))
                         .fixedSize(horizontal: false, vertical: true)
-                        .foregroundColor(cellStyle.textStyle.textColor)
                         .padding(cellStyle.textPadding)
                     
                     if self.computeLineCount(for: String(text.phoneAndHtmlAttribute(style: cellStyle.textStyle).characters), with: cellStyle) > 20 {

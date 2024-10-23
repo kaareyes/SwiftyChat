@@ -45,42 +45,14 @@ struct BasicExampleView: View {
 //                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("New task(s) are assigned to you on action items. \n Note: Operation Singil: si ocs", ["Jett Calleja"], .medium, .pending), messageUUID: UUID().uuidString))
 //                
 //                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("New task(s) are assigned to you on action items. \n Note: Operation Singil: si ocs", ["Jett Calleja"], .high, .pending), messageUUID: UUID().uuidString))
-//                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("New task(s) are assigned to you on action items. \n Note: Operation Singil: si ocs", ["Jett Calleja"], .high, .pending), messageUUID: UUID().uuidString))
+                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("New task(s) are assigned to you on action items. \n Note: Operation Singil: si ocs", ["Jett Calleja"], .high, .pending), messageUUID: UUID().uuidString))
                 
-//                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .imageText(.remote(URL(string: "https://picsum.photos/200/300")!), """
-//                                                                                          The standard Lorem Ipsum passage, used since the 1500s
-//                                                                                          \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"
-//
-//                                                                                          Section 1.10.32 of \"de Finibus Bonorum et Malorum\", written by Cicero in 45 BC
-//                                                                                          \"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam
-//                                                                                          
-//                                                                                          """, ["Jett Calleja"], .high, .pending), messageUUID: UUID().uuidString))
+                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .imageText(.remote(URL(string: "https://picsum.photos/200/300")!), "<p><strong>Bold</strong></p>", ["Amigo"], .routine, nil), messageUUID: UUID().uuidString))
 
-                
-                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text(
-                """
-                <p>Hello world amazing normal message <strong>BOLD </strong>space <strong><em>Italic</em></strong></p>
-                <ul>
-                    <li><strong>Bullet 1</strong></li>
-                    <li><em>Bullet 2 with italic</em></li>
-                </ul>
-                <ol>
-                    <li><u>Numbered item 1 with underline</u></li>
-                    <li>Numbered item 2</li>
-                </ol>
-                """.trimmingCharacters(in: .whitespacesAndNewlines)
-                , nil, .routine, .none), messageUUID: UUID().uuidString))
-                
-                
-                
-                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("<p>Hello world amazing normal message <strong>BOLD </strong>space <strong><em>Italic</em></strong><s> strike testing</s></p>", nil, .routine, .none), messageUUID: UUID().uuidString))
-
-                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text(
-                """
-<p>ST EVAL:</p>
-<p>aw using single sips IND.  Occ uses multiple swallows for each sip. No reports of odynophagia or globus sensation.<br>• Other Swallow Function Note<br>No overt s/s of aspiration observed with any consistency despite delayed pharyngeal initiation and reduced elevation. Good respiratory support for all swallow trials presented.  No esophageal dysphagia noted.  Pt demo reflexive throat clear after PO trials upon repositioning, but not present during assessment.<br>• Dysphagia Patient Goal<br>Pt appears motivated for PO.  Unable to state specific diet consistencies.<br></p>
-""", nil, .routine, .none), messageUUID: UUID().uuidString))
             }
+        
+        
+        
     }
     
     private var chatView: some View {

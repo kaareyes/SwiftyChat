@@ -108,10 +108,8 @@ internal struct ReplyCell<Message: ChatMessage>: View {
                         
                         if #available(iOS 15.0, *) {
                             Text(text.phoneAndHtmlAttribute(style: cellStyle.textStyle))
-                                .fontWeight(cellStyle.textStyle.fontWeight)
                                 .modifier(EmojiModifier(text: String(text.phoneAndHtmlAttribute(style: cellStyle.textStyle).characters), defaultFont: cellStyle.textStyle.font))
                                 .fixedSize(horizontal: false, vertical: true)
-                                .foregroundColor(cellStyle.textStyle.textColor)
                                 .padding(.top,10)
                         }else{
                             Text(text.cleanHtml)

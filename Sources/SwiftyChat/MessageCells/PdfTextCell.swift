@@ -81,20 +81,16 @@ internal struct PdfTextCell<Message: ChatMessage>: View {
                 imageView
                 if #available(iOS 15, *) {
                     Text(formattedTagString)
-                        .fontWeight(cellStyle.textStyle.fontWeight)
                         .modifier(EmojiModifier(text: String(formattedTagString.characters), defaultFont: cellStyle.textStyle.font))
                         .fixedSize(horizontal: false, vertical: true)
-                        .foregroundColor(cellStyle.textStyle.textColor)
                         .padding(cellStyle.textPadding)
 
                 } else {
                     
                     if #available(iOS 15.0, *) {
                         Text(text.phoneAndHtmlAttribute(style: cellStyle.textStyle))
-                            .fontWeight(cellStyle.textStyle.fontWeight)
                             .modifier(EmojiModifier(text: String(text.phoneAndHtmlAttribute(style: cellStyle.textStyle).characters), defaultFont: cellStyle.textStyle.font))
                             .fixedSize(horizontal: false, vertical: true)
-                            .foregroundColor(cellStyle.textStyle.textColor)
                             .padding(cellStyle.textPadding)
 
                     }else {

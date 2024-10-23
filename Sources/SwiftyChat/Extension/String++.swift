@@ -92,6 +92,7 @@ internal extension String {
     
     @available(iOS 15, *)
     func phoneAndHtmlAttribute(style: CommonTextStyle) -> AttributedString {
+        print(self)
         var modifiedText = AttributedString()
         
         if self.containsEscapedHtml() {
