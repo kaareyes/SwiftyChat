@@ -32,6 +32,8 @@ internal struct PdfTextCell<Message: ChatMessage>: View {
         
         var result = AttributedString(attentionName)
         result.foregroundColor = .blue
+        result.font = cellStyle.textStyle.font
+
 
         return result +  text.phoneAndHtmlAttribute(style: cellStyle.textStyle)
     }
