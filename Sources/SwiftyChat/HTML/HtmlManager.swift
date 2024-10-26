@@ -208,8 +208,6 @@ public class HtmlManager : NSObject {
                 let tagContent = fragment.trimmingCharacters(in: CharacterSet(charactersIn: "<>")).lowercased()
                 let isClosingTag = tagContent.hasPrefix("/")
                 let tag = isClosingTag ? String(tagContent.dropFirst()) : tagContent
-                print("tag == \(tag)")
-
                 if isClosingTag {
                     // Handling closing tags
                     switch tag {
