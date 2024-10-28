@@ -30,7 +30,7 @@ public struct Reply : ReplyItem {
 }
 struct BasicExampleView: View {
     
-    @State var messages: [MockMessages.ChatMessageItem] = MockMessages.generateMessage(kind: .Text, count: 1)
+    @State var messages: [MockMessages.ChatMessageItem] = [] //MockMessages.generateMessage(kind: .Text, count: 0)
     
     // MARK: - InputBarView variables
     @State private var message = ""
@@ -45,14 +45,11 @@ struct BasicExampleView: View {
 //                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("New task(s) are assigned to you on action items. \n Note: Operation Singil: si ocs", ["Jett Calleja"], .medium, .pending), messageUUID: UUID().uuidString))
 //                
 //                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("New task(s) are assigned to you on action items. \n Note: Operation Singil: si ocs", ["Jett Calleja"], .high, .pending), messageUUID: UUID().uuidString))
-                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("New task(s) are assigned to you on action items. \n Note: Operation Singil: si ocs", ["Jett Calleja"], .high, .pending), messageUUID: UUID().uuidString))
+                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("<p>Hello Doc,<br>Good Morning.<br>Please see attached file for patient's lab report.<br>Let me know if you have any order/s.<br>Thank you.&nbsp;</p>\n<p></p>\n<p>BMP <br>glucose: 167<br>bun: 31<br>egfr: 52<br>bun/crea ratio: 29<br>sodium: 135<br>chloride: 96<br></p>", ["Jett Calleja"], .high, .pending), messageUUID: UUID().uuidString))
                 
-                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .imageText(.remote(URL(string: "https://picsum.photos/200/300")!), "<p><strong>Bold</strong></p>", ["Amigo"], .routine, nil), messageUUID: UUID().uuidString))
-
+//                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .imageText(.remote(URL(string: "https://picsum.photos/200/300")!), "<p>Hello Doc,<br>Good Morning.<br>Please see attached file for patient's lab report.<br>Let me know if you have any order/s.<br>Thank you.&nbsp;</p>\n<p></p>\n<p>BMP <br>glucose: 167<br>bun: 31<br>egfr: 52<br>bun/crea ratio: 29<br>sodium: 135<br>chloride: 96<br></p>", ["Amigo"], .routine, nil), messageUUID: UUID().uuidString))
+                
             }
-        
-        
-        
     }
     
     private var chatView: some View {

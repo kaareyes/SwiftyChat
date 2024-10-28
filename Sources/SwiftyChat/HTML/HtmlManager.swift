@@ -265,7 +265,7 @@ public class HtmlManager : NSObject {
                         listItemStyleStack = [newStyle]
                     case "s", "del":
                         newStyle.strike = true
-                    case "p":
+                    case "p","br":
                         // Handle <p> tag by adding a new line
                         elements.append(RichTextElement(newLine: true))
                     default:
