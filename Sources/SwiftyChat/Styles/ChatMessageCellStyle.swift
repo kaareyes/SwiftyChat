@@ -48,19 +48,19 @@ public final class ChatMessageCellStyle: ObservableObject {
     
     /// Outgoing Avatar Style
     let outgoingAvatarStyle: AvatarStyle
-    
+
     public init(
         incomingTextStyle: TextCellStyle = TextCellStyle(
             textStyle: CommonTextStyle(
                 textColor: .white,
-                font: Font.custom("Futura", size: 17)
+                font: Font.system(size: 17)
             ),
             cellBackgroundColor: Color(UIColor.systemPink).opacity(0.8)
         ),
         outgoingTextStyle: TextCellStyle = TextCellStyle(
             textStyle: CommonTextStyle(
                 textColor: .white,
-                font: Font.custom("Futura", size: 17),
+                font: Font.system(size: 17),
                 fontWeight: .bold
             )
         ),

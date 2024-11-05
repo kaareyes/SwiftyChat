@@ -93,8 +93,7 @@ internal extension String {
     @available(iOS 15, *)
     func phoneAndHtmlAttribute(style: CommonTextStyle) -> AttributedString {
         var modifiedText = AttributedString()
-        var font = Font.custom("Futura", size: 17)
-        font = font.weight(style.fontWeight)
+        var font = Font.system(size: 17,weight: style.fontWeight)
         
         if self.containsEscapedHtml() {
             // Treat it as plain text

@@ -13,13 +13,14 @@ extension Color {
     static let chatGray = Color(#colorLiteral(red: 0.7861273885, green: 0.7897668481, blue: 0.7986581922, alpha: 1))
 }
 
-let futuraFont = Font.custom("Futura", size: 17)
+//let futuraFont = Font.custom("Futura", size: 17)
+let systemFont = Font.system(size: 17)
 
 internal extension ChatMessageCellStyle {
     
     static let basicStyle = ChatMessageCellStyle(
         incomingTextStyle: .init(
-            textStyle: .init(textColor: .black, font: futuraFont),
+            textStyle: .init(textColor: .black, font: systemFont),
             textPadding: 16,
             attributedTextStyle: .init(textColor: .black),
             cellBackgroundColor: Color.chatGray,
@@ -28,7 +29,7 @@ internal extension ChatMessageCellStyle {
             cellRoundedCorners: [.topRight, .bottomRight, .bottomLeft]
         ),
         outgoingTextStyle: .init(
-            textStyle: .init(textColor: .white, font: futuraFont),
+            textStyle: .init(textColor: .white, font: systemFont),
             textPadding: 16,
             cellBackgroundColor: Color.chatBlue,
             cellBorderWidth: 0,
