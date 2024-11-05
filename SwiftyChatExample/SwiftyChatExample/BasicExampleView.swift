@@ -46,7 +46,10 @@ struct BasicExampleView: View {
 //                
 //                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("New task(s) are assigned to you on action items. \n Note: Operation Singil: si ocs", ["Jett Calleja"], .high, .pending), messageUUID: UUID().uuidString))
                 self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("<p>Hello Doc,<br>Good Morning.<br>Please see attached file for patient's lab report.<br>Let me know if you have any order/s.<br>Thank you.&nbsp;</p>\n<p></p>\n<p>BMP <br>glucose: 167<br>bun: 31<br>egfr: 52<br>bun/crea ratio: 29<br>sodium: 135<br>chloride: 96<br></p>", ["Jett Calleja"], .high, .pending), messageUUID: UUID().uuidString))
-                
+                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("<p>Hello Doc,<br>Good Morning.<br>Please see attached file for patient's lab report.<br>Let me know if you have any order/s.<br>Thank you.&nbsp;</p>\n<p></p>\n<p>BMP <br>glucose: 167<br>bun: 31<br>egfr: 52<br>bun/crea ratio: 29<br>sodium: 135<br>chloride: 96<br></p>", nil, .high, .pending), messageUUID: UUID().uuidString))
+                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("Hello world", nil, .high, .pending), messageUUID: UUID().uuidString))
+
+
 //                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .imageText(.remote(URL(string: "https://picsum.photos/200/300")!), "<p>Hello Doc,<br>Good Morning.<br>Please see attached file for patient's lab report.<br>Let me know if you have any order/s.<br>Thank you.&nbsp;</p>\n<p></p>\n<p>BMP <br>glucose: 167<br>bun: 31<br>egfr: 52<br>bun/crea ratio: 29<br>sodium: 135<br>chloride: 96<br></p>", ["Amigo"], .routine, nil), messageUUID: UUID().uuidString))
                 
             }

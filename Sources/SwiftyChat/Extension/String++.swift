@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import SwiftUI
 /// Emoji helper
 internal extension Character {
     /// A simple emoji is one scalar and presented to the user as an Emoji
@@ -93,12 +93,14 @@ internal extension String {
     @available(iOS 15, *)
     func phoneAndHtmlAttribute(style: CommonTextStyle) -> AttributedString {
         var modifiedText = AttributedString()
+        var font = Font.custom("Futura", size: 17)
+        font = font.weight(style.fontWeight)
         
         if self.containsEscapedHtml() {
             // Treat it as plain text
             modifiedText = AttributedString(self.cleanHtml)
             // Apply default font and text color to the entire text
-            modifiedText.font = style.font
+            modifiedText.font = font
             modifiedText.foregroundColor = style.textColor
         } else {
             // Detect if the input text contains HTML tags
@@ -112,7 +114,7 @@ internal extension String {
                 // Treat it as plain text
                 modifiedText = AttributedString(self)
                 // Apply default font and text color to the entire text
-                modifiedText.font = style.font
+                modifiedText.font = font
                 modifiedText.foregroundColor = style.textColor
             }
         }

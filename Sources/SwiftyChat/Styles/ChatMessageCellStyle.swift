@@ -60,7 +60,7 @@ public final class ChatMessageCellStyle: ObservableObject {
         outgoingTextStyle: TextCellStyle = TextCellStyle(
             textStyle: CommonTextStyle(
                 textColor: .white,
-                font: Font.custom("Tahoma", size: 17),
+                font: Font.custom("Futura", size: 17),
                 fontWeight: .bold
             )
         ),

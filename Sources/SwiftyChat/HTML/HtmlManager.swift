@@ -40,7 +40,8 @@ public class HtmlManager : NSObject {
         var attributedString = AttributedString()
 
         // Define the base UIFont using the default font and font weight
-        let baseUIFont = UIFont.systemFont(ofSize: UIFont.systemFontSize, weight: self.uiFontWeight(from: defaultStyle.fontWeight))
+        var baseUIFont = UIFont(name: "Futura", size: 17)!
+        baseUIFont = baseUIFont.withWeight(uiFontWeight(from: defaultStyle.fontWeight))
 
         for element in elements {
             if element.newLine {
