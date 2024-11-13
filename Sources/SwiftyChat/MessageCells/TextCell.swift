@@ -66,15 +66,13 @@ internal struct TextCell<Message: ChatMessage>: View {
             Text(text)
                 .fontWeight(cellStyle.textStyle.fontWeight)
                 .lineLimit(showFullText ? nil : 20)
-                .modifier(EmojiModifier(text: text, defaultFont: cellStyle.textStyle.font))
                 .fixedSize(horizontal: false, vertical: true)
                 .foregroundColor(cellStyle.textStyle.textColor)
                 .padding(cellStyle.textPadding)
             
-            if self.computeLineCount(for: text, with: cellStyle) > 20 {
+            if text.computeLineCount(containerWidth: maxWidth) > 20 {
                 showMore
             }
-            
             HStack(){
                 
                 if let status = actionStatus {
@@ -127,14 +125,12 @@ internal struct TextCell<Message: ChatMessage>: View {
         VStack(alignment: .leading) {
             Text(attributedText)
                 .lineLimit(showFullText ? nil : 20)
-                .modifier(EmojiModifier(text: String(attributedText.characters), defaultFont: cellStyle.textStyle.font))
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(cellStyle.textPadding)
             
-            if self.computeLineCount(for: String(attributedText.characters), with: cellStyle) > 20 {
+            if String(attributedText.characters).computeLineCount(containerWidth: maxWidth) > 20 {
                 showMore
             }
-            
             
             HStack(){
                 
@@ -163,7 +159,6 @@ internal struct TextCell<Message: ChatMessage>: View {
                         })
                 }
             }
-            
         }
         .background(cellStyle.cellBackgroundColor)
         .clipShape(RoundedCornerShape(radius: cellStyle.cellCornerRadius, corners: cellStyle.cellRoundedCorners))
@@ -179,18 +174,6 @@ internal struct TextCell<Message: ChatMessage>: View {
                     radius: cellStyle.cellShadowRadius
                 )
         )
-    }
-    
-    
-    private func computeLineCount(for text: String, with style: TextCellStyle) -> Int {
-        //Font what is Font in swiftUI
-        let systemFont = UIFont.preferredFont(forTextStyle: .body) // You can change .body to any other text style
-        let fontSize: CGFloat = systemFont.pointSize // Assuming you have a font size in your style
-        let averageCharacterWidth: CGFloat = fontSize * 0.5 // This is a rough estimate
-        let containerWidth: CGFloat = maxWidth // Use the calculated maxWidth for the text container
-        let charactersPerLine = max(1, containerWidth / averageCharacterWidth)
-        let lineCount = Int(ceil(CGFloat(text.count) / charactersPerLine))
-        return lineCount
     }
     
     @available(iOS 15, *)
@@ -221,14 +204,12 @@ internal struct TextCell<Message: ChatMessage>: View {
         VStack(alignment: .leading) {
             Text(formattedTagString)
                 .lineLimit(showFullText ? nil : 20)
-                .modifier(EmojiModifier(text: String(formattedTagString.characters), defaultFont: cellStyle.textStyle.font))
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(cellStyle.textPadding)
             
-            if self.computeLineCount(for: String(formattedTagString.characters), with: cellStyle) > 20 {
+            if String(formattedTagString.characters).computeLineCount(containerWidth: maxWidth) > 20 {
                 showMore
             }
-            
             
             HStack(){
                 

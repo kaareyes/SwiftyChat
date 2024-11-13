@@ -87,36 +87,30 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
             if #available(iOS 15, *) {
                 Text(formattedTagString)
                     .lineLimit(showFullText ? nil : 20)
-                    .modifier(EmojiModifier(text: String(formattedTagString.characters), defaultFont: cellStyle.textStyle.font))
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(cellStyle.textPadding)
-                if self.computeLineCount(for:String(formattedTagString.characters), with: cellStyle) > 20 {
+
+                if String(formattedTagString.characters).computeLineCount(containerWidth: maxWidth) > 20 {
                     showMore
                 }
             } else {
                 if #available(iOS 15.0, *) {
                     Text(text.phoneAndHtmlAttribute(style: cellStyle.textStyle))
                         .lineLimit(showFullText ? nil : 20)
-                        .modifier(EmojiModifier(text: String(text.phoneAndHtmlAttribute(style: cellStyle.textStyle).characters), defaultFont: cellStyle.textStyle.font))
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(cellStyle.textPadding)
-                    
-                    if self.computeLineCount(for: String(text.phoneAndHtmlAttribute(style: cellStyle.textStyle).characters), with: cellStyle) > 20 {
+                    if String(text.phoneAndHtmlAttribute(style: cellStyle.textStyle).characters).computeLineCount(containerWidth: maxWidth) > 20 {
                         showMore
                     }
                 } else {
                     Text(text.cleanHtml)
                         .fontWeight(cellStyle.textStyle.fontWeight)
                         .lineLimit(showFullText ? nil : 20)
-                        .modifier(EmojiModifier(text: text.cleanHtml, defaultFont: cellStyle.textStyle.font))
                         .fixedSize(horizontal: false, vertical: true)
                         .foregroundColor(cellStyle.textStyle.textColor)
                         .padding(cellStyle.textPadding)
                 }
             }
-            
-
-           
             HStack(){
                 if let status = actionStatus {
                     PriorityMessageViewStyle(priorityLevel: priority)
@@ -157,17 +151,6 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
                     radius: cellStyle.cellShadowRadius
                 )
             )
-    }
-    
-    private func computeLineCount(for text: String, with style: ImageTextCellStyle) -> Int {
-        //Font what is Font in swiftUI
-        let systemFont = UIFont.preferredFont(forTextStyle: .body) // You can change .body to any other text style
-        let fontSize: CGFloat = systemFont.pointSize // Assuming you have a font size in your style
-        let averageCharacterWidth: CGFloat = fontSize * 0.5 // This is a rough estimate
-        let containerWidth: CGFloat = maxWidth // Use the calculated maxWidth for the text container
-        let charactersPerLine = max(1, containerWidth / averageCharacterWidth)
-        let lineCount = Int(ceil(CGFloat(text.count) / charactersPerLine))
-        return lineCount
     }
 }
 

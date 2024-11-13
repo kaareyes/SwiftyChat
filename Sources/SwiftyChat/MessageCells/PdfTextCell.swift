@@ -83,7 +83,6 @@ internal struct PdfTextCell<Message: ChatMessage>: View {
                 imageView
                 if #available(iOS 15, *) {
                     Text(formattedTagString)
-                        .modifier(EmojiModifier(text: String(formattedTagString.characters), defaultFont: cellStyle.textStyle.font))
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(cellStyle.textPadding)
 
@@ -91,14 +90,12 @@ internal struct PdfTextCell<Message: ChatMessage>: View {
                     
                     if #available(iOS 15.0, *) {
                         Text(text.phoneAndHtmlAttribute(style: cellStyle.textStyle))
-                            .modifier(EmojiModifier(text: String(text.phoneAndHtmlAttribute(style: cellStyle.textStyle).characters), defaultFont: cellStyle.textStyle.font))
                             .fixedSize(horizontal: false, vertical: true)
                             .padding(cellStyle.textPadding)
 
                     }else {
                         Text(text.cleanHtml)
                             .fontWeight(cellStyle.textStyle.fontWeight)
-                            .modifier(EmojiModifier(text: text.cleanHtml, defaultFont: cellStyle.textStyle.font))
                             .fixedSize(horizontal: false, vertical: true)
                             .foregroundColor(cellStyle.textStyle.textColor)
                             .padding(cellStyle.textPadding)

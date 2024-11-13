@@ -93,7 +93,7 @@ internal extension String {
     @available(iOS 15, *)
     func phoneAndHtmlAttribute(style: CommonTextStyle) -> AttributedString {
         var modifiedText = AttributedString()
-        var font = Font.system(size: 17,weight: style.fontWeight)
+        let font = Font.system(size: 17,weight: style.fontWeight)
         
         if self.containsEscapedHtml() {
             // Treat it as plain text
@@ -150,6 +150,19 @@ internal extension String {
         }
         
         return modifiedText
+    }
+    
+    /// Computes the approximate line count of the string within a given container width and font size
+    /// - Parameters:
+    ///   - containerWidth: The width of the container in which the text is displayed
+    ///   - fontSize: The font size used for the text
+    ///   - characterWidthMultiplier: A multiplier to estimate the average character width. Default is 1.5.
+    /// - Returns: The estimated number of lines required to display the text
+    func computeLineCount(containerWidth: CGFloat, fontSize: CGFloat = 17.0, characterWidthMultiplier: CGFloat = 1.5) -> Int {
+        let averageCharacterWidth: CGFloat = fontSize * characterWidthMultiplier // Adjustable multiplier for character width
+        let charactersPerLine = max(1, containerWidth / averageCharacterWidth)
+        let lineCount = Int(ceil(CGFloat(self.count) / charactersPerLine))
+        return lineCount
     }
 }
 
