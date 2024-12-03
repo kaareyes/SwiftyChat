@@ -64,18 +64,19 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     public var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .bottom) {
-                
-                chatView(in: geometry)
-                    .onTapGesture {
-                        dismissKeyboard()
-                    }
-                inputView()
-                    .onPreferenceChange(ContentSizeThatFitsKey.self) {
-                        contentSizeThatFits = $0
-                    }
-                    .frame(height: messageEditorHeight)
-                    .padding(.bottom, inputBarBottom)
-                
+                VStack (spacing: 0.0){
+                    chatView(in: geometry)
+                        .onTapGesture {
+                            dismissKeyboard()
+                        }
+                    inputView()
+                        .onPreferenceChange(ContentSizeThatFitsKey.self) {
+                            contentSizeThatFits = $0
+                        }
+                        .frame(height: messageEditorHeight)
+                        .padding(.bottom, inputBarBottom)
+                        .background(Color.red)
+                }
                 PIPVideoCell<Message>()
             }
             .iOSOnlyModifier{ $0.keyboardAwarePadding() }
@@ -207,7 +208,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
             }
             .coordinateSpace(name: "scroll")
             .background(Color.clear)
-            .padding(.top, messageEditorHeight + 30)
+          //  .padding(.top, messageEditorHeight + 30)
             .rotationEffect(Angle(degrees: 180)).scaleEffect(x:  -1.0, y: 1.0, anchor: .center)
         }else{
             ScrollView(.vertical, showsIndicators: false) {
