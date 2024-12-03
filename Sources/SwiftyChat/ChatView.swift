@@ -75,7 +75,6 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                         }
                         .frame(height: messageEditorHeight)
                         .padding(.bottom, inputBarBottom)
-                        .background(Color.red)
                 }
                 PIPVideoCell<Message>()
             }
