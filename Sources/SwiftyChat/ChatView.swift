@@ -120,12 +120,13 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                                         
                                         if showDateheader {
                                             Text(dateFormater.string(from: message.date))
-                                                .font(.subheadline)
+                                                .font(.system(size: 14, weight: .medium, design: .default))
+                                                .foregroundColor(Color.secondary)
                                         }
                                         
                                         if shouldShowDisplayName {
                                             Text(message.user.userName)
-                                                .font(.caption)
+                                                .font(.system(size: 12))
                                                 .multilineTextAlignment(.trailing)
                                                 .frame(
                                                     maxWidth: geometry.size.width * (UIDevice.isLandscape ? 0.6 : 0.75),
@@ -134,18 +135,13 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                                                 )
                                         }
                                     }
-                                    
                                     if (message.id == self.messages.last!.id) && isFetching {
                                         ProgressView()
                                             .padding()
-                                        
                                     }
-                                    
                                 }
                                 .rotationEffect(Angle(degrees: 180)).scaleEffect(x:  -1.0, y: 1.0, anchor: .center)
-                                
                             }
-                            
                             
                             Group {
                                 if messages.count == 0 && isFetching {
@@ -154,6 +150,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                                         ProgressView()
                                             .padding()
                                         Text("Fetching Messages")
+                                            .font(.system(size: 12))
                                     }
                                 }
                             }
