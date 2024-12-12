@@ -29,10 +29,11 @@ internal struct PdfTextCell<Message: ChatMessage>: View {
                 attentionName += "@\(name) "
             }
         }
-        
+        let baseUIFont = UIFont.systemFont(ofSize: 17, weight: uiFontWeight(from: cellStyle.textStyle.fontWeight))
+
         var result = AttributedString(attentionName)
         result.foregroundColor = .blue
-        result.font = cellStyle.textStyle.font
+        result.font = baseUIFont
 
 
         return result +  text.phoneAndHtmlAttribute(style: cellStyle.textStyle)
@@ -48,6 +49,21 @@ internal struct PdfTextCell<Message: ChatMessage>: View {
         }
         return false
     }
+    func uiFontWeight(from fontWeight: Font.Weight) -> UIFont.Weight {
+        switch fontWeight {
+        case .ultraLight: return .ultraLight
+        case .thin: return .thin
+        case .light: return .light
+        case .regular: return .regular
+        case .medium: return .medium
+        case .semibold: return .semibold
+        case .bold: return .bold
+        case .heavy: return .heavy
+        case .black: return .black
+        default: return .regular
+        }
+    }
+
     
     private var imageWidth: CGFloat {
         cellStyle.cellWidth(size)
