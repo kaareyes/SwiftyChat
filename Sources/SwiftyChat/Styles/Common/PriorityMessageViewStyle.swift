@@ -23,7 +23,7 @@ public struct PriorityMessageViewStyle: View {
                 .font(.system(size: fontSize))
 
             Text(priorityLevel.body)
-                .font(.caption)
+                .font(.system(size: 12))
                 .fontWeight(.semibold)
                 .foregroundColor(priorityLevel.foregroundColor)
                 .font(.system(size: fontSize))

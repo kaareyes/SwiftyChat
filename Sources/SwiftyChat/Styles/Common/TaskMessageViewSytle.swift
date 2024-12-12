@@ -17,7 +17,6 @@ public struct TaskMessageViewSytle: View {
     public var body: some View {
         
         Text("VIEW TASK")
-            .font(.caption)
             .fontWeight(.bold)
             .foregroundColor(Color.blue)
             .font(.system(size: fontSize))
