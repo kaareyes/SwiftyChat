@@ -13,7 +13,7 @@ internal struct SystemMessageCell<Message: ChatMessage>: View {
 
     var body: some View {
             VStack {
-                Text(message.date.dateFormat(format: "MMM d 'at' h:mm a"))
+                Text(message.date.dateFormat())
                     .font(.system(size: 12))
                     .foregroundColor(.gray)
                     .italic()

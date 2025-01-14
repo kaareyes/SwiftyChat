@@ -203,7 +203,7 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
     }
     
     private var timeStamp : some View {
-        Text(message.date.dateFormat(format: "MMM d yyyy 'At' h:mm a"))
+        Text(message.date.dateFormat())
             .font(.system(size: 10))
             .fontWeight(.regular)
             .foregroundColor(.blue)
@@ -355,7 +355,7 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
     
     private var sentNormalStatus : some View {
         HStack(spacing : 5) {
-            Text(message.date.dateFormat(format: "MMM d yyyy 'At' h:mm a"))
+            Text(message.date.dateFormat())
                 .font(.system(size: 10))
                 .fontWeight(.regular)
                 .foregroundColor(.blue)

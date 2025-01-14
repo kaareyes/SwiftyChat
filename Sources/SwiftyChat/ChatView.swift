@@ -24,7 +24,6 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     private var didTappedMedia: (String) -> Void = { (_) in }
     private var didTappedViewTask: (Message) -> Void = { (_) in }
     private var inset: EdgeInsets
-    private var dateFormater: DateFormatter = DateFormatter()
     private var dateHeaderTimeInterval: TimeInterval
     private var shouldShowGroupChatHeaders: Bool
     private var reachedTop: ((_ lastDate : Date) -> Void)?
@@ -119,7 +118,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                                             }
                                         
                                         if showDateheader {
-                                            Text(dateFormater.string(from: message.date))
+                                            Text(message.date.generateHeaderTimestamp())
                                                 .font(.system(size: 14, weight: .medium, design: .default))
                                                 .foregroundColor(Color.secondary)
                                         }
@@ -222,7 +221,8 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                             )
                             
                             if showDateheader {
-                                Text(dateFormater.string(from: message.date))
+                                
+                                Text(message.date.generateHeaderTimestamp())
                                     .font(.subheadline)
                             }
                             
@@ -420,10 +420,6 @@ public extension ChatView {
         self.inputView = inputView
         _scrollToBottom = scrollToBottom
         self.inset = inset
-        self.dateFormater.dateStyle = .medium
-        self.dateFormater.timeStyle = .short
-        self.dateFormater.timeZone = NSTimeZone.local
-        self.dateFormater.doesRelativeDateFormatting = true
         self.dateHeaderTimeInterval = dateHeaderTimeInterval
         self.shouldShowGroupChatHeaders = shouldShowGroupChatHeaders
         self.reachedTop = reachedTop

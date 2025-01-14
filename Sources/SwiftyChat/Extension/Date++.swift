@@ -11,20 +11,53 @@ internal extension Date {
     static func - (lhs: Date, rhs: Date) -> TimeInterval {
         lhs.timeIntervalSinceReferenceDate - rhs.timeIntervalSinceReferenceDate
     }
-    func dateFormat(format: String) -> String {
+    func dateFormat() -> String {
         let dateFormatter = DateFormatter()
 
         if Calendar.current.isDateInToday(self) {
-            dateFormatter.dateFormat = "'Today' 'At' h:mm a"
-
-        } else if Calendar.current.isDate(self, equalTo: Date(), toGranularity: .year) {
-            dateFormatter.dateFormat = "MMM d 'At' h:mm a"
-
+            // Today
+            dateFormatter.dateFormat = "Today, h:mm a"
+        } else if Calendar.current.isDateInYesterday(self) {
+            // Yesterday
+            dateFormatter.dateFormat = "MMM d, h:mm a"
+        } else if let startOfYear = Calendar.current.date(from: Calendar.current.dateComponents([.year], from: Date())),
+                  self >= startOfYear {
+            // Month-to-Date and Year-to-Date
+            dateFormatter.dateFormat = "MMM d, h:mm a"
         } else {
+            // Older dates
+            dateFormatter.dateFormat = "MMM d, yyyy"
+        }
+
+        return dateFormatter.string(from: self)
+    }
+    func generateHeaderTimestamp() -> String {
+        let calendar = Calendar.current
+        let dateFormatter = DateFormatter()
+        
+        // Helper function to format the date
+        func format(_ format: String) -> String {
             dateFormatter.dateFormat = format
+            return dateFormatter.string(from: self)
+        }
+
+        if calendar.isDateInToday(self) {
+            // Case: Today
+            return "Today"
+        } else if calendar.isDateInYesterday(self) {
+            // Case: Yesterday
+            return "Yesterday"
+        } else if let startOfYear = calendar.date(from: calendar.dateComponents([.year], from: Date())),
+                  self >= startOfYear {
+            // Case: Month-to-Date or Year-to-Date
+            return format("Ddd, MMM dd")
+        } else {
+            // Case: Older Dates
+            return format("MMM dd, yyyy")
         }
         
         return dateFormatter.string(from: self)
+
     }
 
     var iso8601String: String {
