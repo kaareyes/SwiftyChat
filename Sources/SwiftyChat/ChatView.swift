@@ -91,55 +91,53 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
             ScrollView(.vertical, showsIndicators: false) {
                     ScrollViewReader { proxy in
                         LazyVStack {
-                            ForEach(messages) { message in
-                                Group {
-                                    
-                                    switch message.messageKind {
-                                    case .systemMessage(let text):
-                                        SystemMessageCell(text: text,message:message)
-                                            .onAppear {
-                                                self.checkMessagePosition(message)
-                                            }
-                                    default:
-                                        let showDateheader = shouldShowDateHeader(
-                                            messages: messages,
-                                            thisMessage: message
-                                        )
-                                        let shouldShowDisplayName = shouldShowDisplayName(
-                                            messages: messages,
-                                            thisMessage: message,
-                                            dateHeaderShown: showDateheader
-                                        )
-                                        ChatNameAndTime(message: message, tappedResendAction: self.tappedResendAction)
-                                        chatMessageCellContainer(in: geometry.size, with: message, with: shouldShowDisplayName)
-                                            .id(message.id)
-                                            .onAppear {
-                                                self.checkMessagePosition(message)
-                                            }
+                            ForEach(groupedMessagesByDate(messages: messages), id: \.date) { group in
+                                
+                                ForEach(group.messages) { message in
+                                    Group {
                                         
-                                        if showDateheader {
-                                            Text(message.date.generateHeaderTimestamp())
-                                                .font(.system(size: 14, weight: .medium, design: .default))
-                                                .foregroundColor(Color.secondary)
+                                        switch message.messageKind {
+                                        case .systemMessage(let text):
+                                            SystemMessageCell(text: text,message:message)
+                                                .onAppear {
+                                                    self.checkMessagePosition(message)
+                                                }
+                                        default:
+                                            let shouldShowDisplayName = shouldShowDisplayName(
+                                                messages: messages,
+                                                thisMessage: message,
+                                                dateHeaderShown: false
+                                            )
+                                            ChatNameAndTime(message: message, tappedResendAction: self.tappedResendAction)
+                                            chatMessageCellContainer(in: geometry.size, with: message, with: shouldShowDisplayName)
+                                                .id(message.id)
+                                                .onAppear {
+                                                    self.checkMessagePosition(message)
+                                                }
+                                            
+                                            if shouldShowDisplayName {
+                                                Text(message.user.userName)
+                                                    .font(.system(size: 12))
+                                                    .multilineTextAlignment(.trailing)
+                                                    .frame(
+                                                        maxWidth: geometry.size.width * (UIDevice.isLandscape ? 0.6 : 0.75),
+                                                        minHeight: 1,
+                                                        alignment: message.isSender ? .trailing: .leading
+                                                    )
+                                            }
                                         }
-                                        
-                                        if shouldShowDisplayName {
-                                            Text(message.user.userName)
-                                                .font(.system(size: 12))
-                                                .multilineTextAlignment(.trailing)
-                                                .frame(
-                                                    maxWidth: geometry.size.width * (UIDevice.isLandscape ? 0.6 : 0.75),
-                                                    minHeight: 1,
-                                                    alignment: message.isSender ? .trailing: .leading
-                                                )
+                                     
+                                        if (message.id == self.messages.last!.id) && isFetching {
+                                            ProgressView()
+                                                .padding()
                                         }
                                     }
-                                    if (message.id == self.messages.last!.id) && isFetching {
-                                        ProgressView()
-                                            .padding()
-                                    }
+                                    .rotationEffect(Angle(degrees: 180)).scaleEffect(x:  -1.0, y: 1.0, anchor: .center)
                                 }
-                                .rotationEffect(Angle(degrees: 180)).scaleEffect(x:  -1.0, y: 1.0, anchor: .center)
+                                Text(group.date.generateHeaderTimestamp())
+                                    .font(.system(size: 14, weight: .medium, design: .default))
+                                    .foregroundColor(Color.secondary)
+                                    .rotationEffect(Angle(degrees: 180)).scaleEffect(x:  -1.0, y: 1.0, anchor: .center)
                             }
                             
                             Group {
@@ -280,6 +278,15 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
             .padding(.bottom, messageEditorHeight + 30)
         }
         
+    }
+    
+    func groupedMessagesByDate(messages: [Message]) -> [(date: Date, messages: [Message])] {
+        let grouped = Dictionary(grouping: messages) { message in
+            Calendar.current.startOfDay(for: message.date)
+        }
+        return grouped
+            .map { ($0.key, $0.value) }
+            .sorted { $0.0 > $1.0 }
     }
     
     private func checkMessagePosition(_ message: Message) {
