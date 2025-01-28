@@ -205,7 +205,6 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
             }
             .coordinateSpace(name: "scroll")
             .background(Color.clear)
-          //  .padding(.top, messageEditorHeight + 30)
             .rotationEffect(Angle(degrees: 180)).scaleEffect(x:  -1.0, y: 1.0, anchor: .center)
         }else{
             ScrollView(.vertical, showsIndicators: false) {
@@ -279,7 +278,6 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                 }
             }
             .background(Color.clear)
-            .padding(.bottom, messageEditorHeight + 30)
         }
         
     }
