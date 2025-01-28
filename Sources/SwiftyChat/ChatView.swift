@@ -66,11 +66,18 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                         .onTapGesture {
                             dismissKeyboard()
                         }
+//                    inputView()
+//                        .background(Color.green)
+//
+//                    inputView()
+//                        .background(Color.red)
                     inputView()
-                        .onPreferenceChange(ContentSizeThatFitsKey.self) {
-                            contentSizeThatFits = $0
-                        }
-                        .frame(height: messageEditorHeight)
+//                        .onPreferenceChange(ContentSizeThatFitsKey.self) {
+//                            contentSizeThatFits = $0
+//                        }
+//                        .frame(height: messageEditorHeight)
+                       .background(Color.blue)
+
                         .padding(.bottom,10)
                 }
                 PIPVideoCell<Message>()
