@@ -134,6 +134,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                                     }
                                     .rotationEffect(Angle(degrees: 180)).scaleEffect(x:  -1.0, y: 1.0, anchor: .center)
                                 }
+                                
                                 Text(group.date.generateHeaderTimestamp())
                                     .font(.system(size: 14, weight: .medium, design: .default))
                                     .foregroundColor(Color.secondary)

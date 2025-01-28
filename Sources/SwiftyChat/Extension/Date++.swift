@@ -23,7 +23,7 @@ internal extension Date {
         if calendar.isDateInToday(self) {
             dateFormatter.dateFormat = "'Today,' h:mm a"
         } else if calendar.isDateInYesterday(self) {
-            dateFormatter.dateFormat = "'Yesterday,' h:mm a"
+            dateFormatter.dateFormat = "MMM d, h:mm a"
         } else if let startOfYear = calendar.date(from: calendar.dateComponents([.year], from: Date())),
                   self >= startOfYear {
             dateFormatter.dateFormat = "MMM d, h:mm a"
