@@ -39,14 +39,13 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     @Binding private var isFetching: Bool
     @State private var isKeyboardActive = false
     @State private var contentSizeThatFits: CGSize = .zero
-    @Binding private var additionalHeight : CGFloat
 
     
     private var messageEditorHeight: CGFloat {
         min(
             contentSizeThatFits.height,
             0.25 * UIScreen.main.bounds.height
-        ) //+ additionalHeight
+        )
     }
     
     
@@ -72,17 +71,14 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                             contentSizeThatFits = $0
                         }
                         .frame(height: messageEditorHeight)
+                        .padding(.bottom,10)
                 }
-                .padding(.bottom,10)
                 PIPVideoCell<Message>()
             }
-            .iOSOnlyModifier{ $0.keyboardAwarePadding() }
+            .background(Color.white)
         }
         .environmentObject(DeviceOrientationInfo())
         .environmentObject(VideoManager<Message>())
-        .edgesIgnoringSafeArea(.bottom)
-        
-        //  .iOSOnlyModifier { $0.dismissKeyboardOnTappingOutside() }
     }
     
     @ViewBuilder private func chatView(in geometry: GeometryProxy) -> some View {
@@ -405,8 +401,7 @@ public extension ChatView {
     ///                                 (disabled by default)
     ///   - inputView: inputView view to provide message
     ///
-    init(additionalHeight : Binding<CGFloat> = .constant(0.0),
-         isFetching : Binding<Bool> = .constant(false),
+    init(isFetching : Binding<Bool> = .constant(false),
          inverted : Bool = false,
          messages: Binding<[Message]>,
          scrollToBottom: Binding<Bool> = .constant(false),
@@ -422,7 +417,6 @@ public extension ChatView {
          didDismissKeyboard :@escaping () -> Void
          
     ) {
-        self._additionalHeight = additionalHeight
         _messages = messages
         self.inputView = inputView
         _scrollToBottom = scrollToBottom
