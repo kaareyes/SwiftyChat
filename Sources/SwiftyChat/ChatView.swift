@@ -40,14 +40,13 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     @State private var isKeyboardActive = false
     @State private var contentSizeThatFits: CGSize = .zero
     @Binding private var additionalHeight : CGFloat
-    @Binding private var inputBarBottom : CGFloat
 
     
     private var messageEditorHeight: CGFloat {
         min(
             contentSizeThatFits.height,
             0.25 * UIScreen.main.bounds.height
-        ) + additionalHeight
+        ) //+ additionalHeight
     }
     
     
@@ -73,8 +72,8 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                             contentSizeThatFits = $0
                         }
                         .frame(height: messageEditorHeight)
-                        .padding(.bottom, inputBarBottom)
                 }
+                .padding(.bottom,10)
                 PIPVideoCell<Message>()
             }
             .iOSOnlyModifier{ $0.keyboardAwarePadding() }
@@ -82,6 +81,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
         .environmentObject(DeviceOrientationInfo())
         .environmentObject(VideoManager<Message>())
         .edgesIgnoringSafeArea(.bottom)
+        
         //  .iOSOnlyModifier { $0.dismissKeyboardOnTappingOutside() }
     }
     
@@ -405,8 +405,7 @@ public extension ChatView {
     ///                                 (disabled by default)
     ///   - inputView: inputView view to provide message
     ///
-    init(inputBarBottom : Binding<CGFloat> = .constant(12.0),
-         additionalHeight : Binding<CGFloat> = .constant(0.0),
+    init(additionalHeight : Binding<CGFloat> = .constant(0.0),
          isFetching : Binding<Bool> = .constant(false),
          inverted : Bool = false,
          messages: Binding<[Message]>,
@@ -438,7 +437,6 @@ public extension ChatView {
         _hasMore = hasMore
         self.inverted = inverted
         _isFetching = isFetching
-        self._inputBarBottom = inputBarBottom
     }
 }
 
