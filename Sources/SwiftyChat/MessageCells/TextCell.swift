@@ -192,11 +192,17 @@ internal struct TextCell<Message: ChatMessage>: View {
 
         
         
-        return result + text.phoneAndHtmlAttribute(style: cellStyle.textStyle)
+        let combinedAttributedText = result + text.phoneAndHtmlAttribute(style: cellStyle.textStyle)
+        return FormattedLinkManager.formattedAttributedString(from: combinedAttributedText)
     }
+    
+    
+    
     @available(iOS 15, *)
     private var attributedText: AttributedString {
-        return text.phoneAndHtmlAttribute(style: cellStyle.textStyle)
+        
+        let combinedAttributedText = text.phoneAndHtmlAttribute(style: cellStyle.textStyle)
+        return FormattedLinkManager.formattedAttributedString(from: combinedAttributedText)
     }
     
     

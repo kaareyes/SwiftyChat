@@ -35,7 +35,9 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
         var result = AttributedString(attentionName)
         result.foregroundColor = .blue
         result.font = baseUIFont
-        return result +  text.phoneAndHtmlAttribute(style: cellStyle.textStyle)
+        
+        let combinedAttributedText = result + text.phoneAndHtmlAttribute(style: cellStyle.textStyle)
+        return FormattedLinkManager.formattedAttributedString(from: combinedAttributedText)
     }
     private var maxWidth: CGFloat {
         size.width * (UIDevice.isLandscape ? 0.6 : 0.75)

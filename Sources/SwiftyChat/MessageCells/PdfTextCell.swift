@@ -35,8 +35,8 @@ internal struct PdfTextCell<Message: ChatMessage>: View {
         result.foregroundColor = .blue
         result.font = baseUIFont
 
-
-        return result +  text.phoneAndHtmlAttribute(style: cellStyle.textStyle)
+        let combinedAttributedText = result + text.phoneAndHtmlAttribute(style: cellStyle.textStyle)
+        return FormattedLinkManager.formattedAttributedString(from: combinedAttributedText)
     }
     
     private var hasText : Bool {
