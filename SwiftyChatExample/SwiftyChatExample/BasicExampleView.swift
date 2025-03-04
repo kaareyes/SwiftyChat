@@ -97,6 +97,9 @@ struct BasicExampleView: View {
             print(  message.messageKind.description)
             self.showingOptions = true
         })
+        .onScrollStateChanged({ isScrolling in
+            print("iscrolling \(isScrolling)")
+        })
         
             
         

@@ -9,6 +9,12 @@
 import SwiftUI
 import SwiftUIEKtensions
 
+public extension ChatView {
+    func onScrollStateChanged(_ action: @escaping (Bool) -> Void) -> Self {
+        then { $0.onScrollStateChanged = action }
+    }
+}
+
 public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     
     @Binding private var messages: [Message]
@@ -30,7 +36,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     private var reachedBottom: ((_ lastDate : Date) -> Void)?
     private var tappedResendAction : (Message) -> Void
     private var didDismissKeyboard : () -> Void
-    
+    private var onScrollStateChanged: ((Bool) -> Void)? = nil
     private var inverted : Bool
     
     @Binding private var scrollTo: UUID?
@@ -39,7 +45,8 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     @Binding private var isFetching: Bool
     @State private var isKeyboardActive = false
     @State private var contentSizeThatFits: CGSize = .zero
-
+    @State private var isScrolling: Bool = false
+    @State private var lastScrollOffset: CGFloat = 0
     
     private var messageEditorHeight: CGFloat {
         min(
@@ -66,16 +73,8 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                         .onTapGesture {
                             dismissKeyboard()
                         }
-//                    inputView()
-//                        .background(Color.green)
-//
-//                    inputView()
-//                        .background(Color.red)
                     inputView()
-//                        .onPreferenceChange(ContentSizeThatFitsKey.self) {
-//                            contentSizeThatFits = $0
-//                        }
-//                        .frame(height: messageEditorHeight)
+
                        .background(Color.blue)
 
                         .padding(.bottom,10)
@@ -162,10 +161,17 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                                 Color.clear.preference(key: ViewOffsetKey.self, value: -$0.frame(in: .named("scroll")).origin.y)
                             }
                         )
-                        .onPreferenceChange(ViewOffsetKey.self) { _ in
+                        .onPreferenceChange(ViewOffsetKey.self) { newOffset in
                             if isKeyboardActive {
                                 self.dismissKeyboard()
                             }
+                            
+                            let scrolling = abs(newOffset - lastScrollOffset) > 1
+                            if scrolling != isScrolling {
+                                isScrolling = scrolling
+                                onScrollStateChanged?(isScrolling) // Call closure
+                            }
+                            lastScrollOffset = newOffset
                         }
                         .padding(EdgeInsets(top: inset.top, leading: inset.leading, bottom: 0, trailing: inset.trailing))
                         .onChange(of: scrollToBottom) { value in
