@@ -20,6 +20,18 @@ class FormattedLinkManager {
                 //
                 let formattedLink = formatURL(link)
                 mutableAttributedText[range].link = URL(string: formattedLink)
+                
+                if link.lowercased().contains(".pdf") {
+                    if let url = URL(string: link), url.pathComponents.last?.lowercased().hasSuffix(".pdf") == true {
+                        let fileName = url.lastPathComponent
+                        mutableAttributedText.replaceSubrange(range, with: AttributedString(fileName))
+                        if let newRange = mutableAttributedText.range(of: fileName) {
+                            mutableAttributedText[newRange].foregroundColor = .blue
+                            mutableAttributedText[newRange].underlineStyle = .single
+                            mutableAttributedText[newRange].link = URL(string: formattedLink)
+                        }
+                    }
+                }
             }
         }
         
