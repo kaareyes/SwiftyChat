@@ -90,6 +90,9 @@ struct BasicExampleView: View {
         }didDismissKeyboard: {
             
         }
+        tappedReactionButton: {
+           print("tapped")
+       }
         .didTappedViewTask({ message in
             print("didtapped view task \(message.messageKind)")
         })

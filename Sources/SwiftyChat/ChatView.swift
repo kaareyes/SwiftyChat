@@ -35,6 +35,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     private var reachedTop: ((_ lastDate : Date) -> Void)?
     private var reachedBottom: ((_ lastDate : Date) -> Void)?
     private var tappedResendAction : (Message) -> Void
+    private var tappedReactionButton : () -> Void
     private var didDismissKeyboard : () -> Void
     private var onScrollStateChanged: ((Bool) -> Void)? = nil
     private var inverted : Bool
@@ -110,7 +111,9 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                                                 thisMessage: message,
                                                 dateHeaderShown: false
                                             )
-                                            ChatNameAndTime(message: message, tappedResendAction: self.tappedResendAction)
+                                            
+                                            ChatNameAndTime(message: message, tappedResendAction: self.tappedResendAction,tappedReaction: self.tappedReactionButton)
+                                                .zIndex(1)
                                             chatMessageCellContainer(in: geometry.size, with: message, with: shouldShowDisplayName)
                                                 .id(message.id)
                                                 .onAppear {
@@ -425,7 +428,8 @@ public extension ChatView {
          reachedTop: ((_ lastDate : Date) -> Void)? = nil,
          reachedBottom: ((_ lastDate : Date) -> Void)? = nil,
          tappedResendAction : @escaping (Message) -> Void,
-         didDismissKeyboard :@escaping () -> Void
+         didDismissKeyboard :@escaping () -> Void,
+         tappedReactionButton : @escaping () -> Void
          
     ) {
         _messages = messages
@@ -437,6 +441,7 @@ public extension ChatView {
         self.reachedTop = reachedTop
         self.reachedBottom = reachedBottom
         self.tappedResendAction = tappedResendAction
+        self.tappedReactionButton = tappedReactionButton
         self.didDismissKeyboard = didDismissKeyboard
         _scrollTo = scrollTo
         _hasMore = hasMore

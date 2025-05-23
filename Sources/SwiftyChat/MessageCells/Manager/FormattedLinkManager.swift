@@ -60,13 +60,11 @@ class FormattedLinkManager {
             return "https://\(link)"
         }
     }
-    
     /// Detects links in a string using regular expressions.
     /// - Parameter text: The input string
     /// - Returns: An array of detected URLs in string format
     private static func detectLinks(in text: String) -> [String] {
         let regexPattern = #"(?i)\b((?:https?:\/\/|www\.)?[a-z0-9.-]+\.[a-z]{2,}\b(?:\/[^\s]*)?)"#
-        
         do {
             let regex = try NSRegularExpression(pattern: regexPattern, options: [])
             let matches = regex.matches(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count))

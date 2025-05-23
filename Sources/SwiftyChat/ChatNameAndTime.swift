@@ -1,6 +1,6 @@
 //
 //  SwiftUIView.swift
-//  
+//
 //
 //  Created by AL Reyes on 2/15/23.
 //
@@ -10,15 +10,21 @@ import SwiftUI
 public struct ChatNameAndTime<Message: ChatMessage>: View {
     public let message: Message
     public var tappedResendAction : (Message) -> Void
-    
+    public var tappedReaction : () -> Void
+    @State private var showReactions = false
+
     public var body: some View {
         Group {
             HStack(alignment: .center, spacing : 5){
                 if !message.isSender {
                     timeStamp
                     actionStatus
+                    reactionButtonView
+                        .padding(.leading,2)
                 }else{
-                    
+                    reactionButtonView
+                        .padding(.trailing,2)
+
                     switch message.status {
                     case .failed:
                         Group {
@@ -366,4 +372,37 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
                 .padding(.horizontal,10)
         }
     }
+    
+
+    private var reactionButtonView: some View {
+        ZStack {
+            Button(action: {
+                self.tappedReaction()
+            }) {
+                ZStack {
+                    Image(systemName: "face.smiling") // main icon
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 17, height: 17)
+                        .foregroundColor(.gray)
+
+                    Image(systemName: "plus.circle.fill") // plus overlay
+                        .resizable()
+                        .frame(width: 10, height: 10)
+                        .foregroundColor(.blue)
+                        .background(Color.white)
+                        .clipShape(Circle())
+                        .offset(x: 7, y: 7)
+                }
+            }
+            .buttonStyle(PlainButtonStyle())
+            .onLongPressGesture {
+                withAnimation {
+                    self.tappedReaction()
+                }
+            }
+        }
+    }
+    
+    
 }
