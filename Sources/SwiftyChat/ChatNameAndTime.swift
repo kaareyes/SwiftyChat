@@ -17,10 +17,18 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
         Group {
             HStack(alignment: .center, spacing : 5){
                 if !message.isSender {
-                    timeStamp
-                    actionStatus
-                    reactionButtonView
-                        .padding(.leading,2)
+                    VStack(alignment: .leading, spacing: 5){
+                        HStack(alignment: .center, spacing: 5){
+                            timeStamp
+                            actionStatus
+                            reactionButtonView
+                                .padding(.leading,2)
+
+                        }
+                        reactionListView
+                    }
+                    
+              
                 }else{
                     reactionButtonView
                         .padding(.trailing,2)
@@ -56,7 +64,16 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
                     case .sent:
                         
                         switch message.messageKind {
-                        case .text(_, _,  _, let actionItemStatus):
+                        case .text(_, _,  _, let actionItemStatus,let reactions),
+                            .image(_, _, let actionItemStatus,let reactions),
+                            .imageText(_, _, _, _, let actionItemStatus,let reactions),
+                            .video(_, _, let actionItemStatus,let reactions),
+                            .videoText(_, _, _, _, let actionItemStatus,let reactions),
+                            .reply(_, _, _, let actionItemStatus,let reactions),
+                            .pdf(_, _, _, _, _, let actionItemStatus,let reactions),
+                            .audio(_, _, let actionItemStatus,let reactions)
+                            
+                            :
                             if let actionItemStatus = actionItemStatus {
                                 timeStamp
                                 Text(actionItemStatus.body.uppercased())
@@ -73,125 +90,6 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
                                 sentNormalStatus
                             }
 
-                        case .image(_, _, let actionItemStatus):
-                            if let actionItemStatus = actionItemStatus {
-                                timeStamp
-                                Text(actionItemStatus.body.uppercased())
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .font(.system(size: 10))
-                                    .fontWeight(.regular)
-                                Image(systemName: actionItemStatus.logo)
-                                    .font(.system(size: 10))
-                                    .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .padding(.horizontal,10)
-
-                                
-                            }else{
-                                sentNormalStatus
-                            }
-                        case .imageText(_, _, _, _, let actionItemStatus):
-                            if let actionItemStatus = actionItemStatus {
-                                timeStamp
-                                Text(actionItemStatus.body.uppercased())
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .font(.system(size: 10))
-                                    .fontWeight(.regular)
-                                Image(systemName: actionItemStatus.logo)
-                                    .font(.system(size: 10))
-                                    .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .padding(.horizontal,10)
-
-                                
-                            }else{
-                                sentNormalStatus
-                            }
-                        case .video(_, _, let actionItemStatus):
-                            if let actionItemStatus = actionItemStatus {
-                                timeStamp
-                                Text(actionItemStatus.body.uppercased())
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .font(.system(size: 10))
-                                    .fontWeight(.regular)
-                                Image(systemName: actionItemStatus.logo)
-                                    .font(.system(size: 10))
-                                    .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .padding(.horizontal,10)
-
-                                
-                            }else{
-                                sentNormalStatus
-                            }
-                        case .videoText(_, _, _, _, let actionItemStatus):
-                            if let actionItemStatus = actionItemStatus {
-                                timeStamp
-                                Text(actionItemStatus.body.uppercased())
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .font(.system(size: 10))
-                                    .fontWeight(.regular)
-                                Image(systemName: actionItemStatus.logo)
-                                    .font(.system(size: 10))
-                                    .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .padding(.horizontal,10)
-
-                                
-                            }else{
-                                sentNormalStatus
-                            }
-                        case .reply(_, _, _, let actionItemStatus):
-                            if let actionItemStatus = actionItemStatus {
-                                timeStamp
-                                Text(actionItemStatus.body.uppercased())
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .font(.system(size: 10))
-                                    .fontWeight(.regular)
-                                Image(systemName: actionItemStatus.logo)
-                                    .font(.system(size: 10))
-                                    .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .padding(.horizontal,10)
-
-                                
-                            }else{
-                                sentNormalStatus
-                            }
-                        case .pdf(_, _, _, _, _, let actionItemStatus):
-                            if let actionItemStatus = actionItemStatus {
-                                timeStamp
-                                Text(actionItemStatus.body.uppercased())
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .font(.system(size: 10))
-                                    .fontWeight(.regular)
-                                Image(systemName: actionItemStatus.logo)
-                                    .font(.system(size: 10))
-                                    .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .padding(.horizontal,10)
-
-                                
-                            }else{
-                                sentNormalStatus
-                            }
-                        case .audio(_, _, let actionItemStatus):
-                            if let actionItemStatus = actionItemStatus {
-                                timeStamp
-                                Text(actionItemStatus.body.uppercased())
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .font(.system(size: 10))
-                                    .fontWeight(.regular)
-                                Image(systemName: actionItemStatus.logo)
-                                    .font(.system(size: 10))
-                                    .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .padding(.horizontal,10)
-
-                                
-                            }else{
-                                sentNormalStatus
-                            }
                         default:
                             sentNormalStatus
                         }
@@ -221,140 +119,29 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
             .fontWeight(.regular)
     }
     
-    private var actionStatus : some View {
-        HStack(spacing : 5) {
-            
+    private var actionStatus: some View {
+        HStack(spacing: 5) {
             if !message.isSender {
                 currentUser
             }
+
             switch message.messageKind {
-            case .text(_, _,  _, let actionItemStatus):
+            case .text(_, _, _, let actionItemStatus, _),
+                 .image(_, _, let actionItemStatus, _),
+                 .imageText(_, _, _, _, let actionItemStatus, _),
+                 .video(_, _, let actionItemStatus, _),
+                 .videoText(_, _, _, _, let actionItemStatus, _),
+                 .reply(_, _, _, let actionItemStatus, _),
+                 .pdf(_, _, _, _, _, let actionItemStatus, _),
+                 .audio(_, _, let actionItemStatus, _):
                 if let actionItemStatus = actionItemStatus {
-                    Text(actionItemStatus.body.uppercased())
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .font(.system(size: 10))
-                        .fontWeight(.regular)
-                    Image(systemName: actionItemStatus.logo)
-                        .font(.system(size: 10))
-                        .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .padding(.horizontal,10)
-
-                }else{
-                    EmptyView()
-                }
-
-            case .image(_, _, let actionItemStatus):
-                if let actionItemStatus = actionItemStatus {
-                    Text(actionItemStatus.body.uppercased())
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .font(.system(size: 10))
-                        .fontWeight(.regular)
-                    Image(systemName: actionItemStatus.logo)
-                        .font(.system(size: 10))
-                        .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .padding(.horizontal,10)
-
-                }else{
-                    EmptyView()
-                }
-            case .imageText(_, _, _, _, let actionItemStatus):
-                if let actionItemStatus = actionItemStatus {
-                    Text(actionItemStatus.body.uppercased())
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .font(.system(size: 10))
-                        .fontWeight(.regular)
-                    Image(systemName: actionItemStatus.logo)
-                        .font(.system(size: 10))
-                        .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .padding(.horizontal,10)
-
-                }else{
-                    EmptyView()
-                }
-            case .video(_, _, let actionItemStatus):
-                if let actionItemStatus = actionItemStatus {
-                    Text(actionItemStatus.body.uppercased())
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .font(.system(size: 10))
-                        .fontWeight(.regular)
-                    Image(systemName: actionItemStatus.logo)
-                        .font(.system(size: 10))
-                        .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .padding(.horizontal,10)
-
-                }else{
-                    EmptyView()
-                }
-            case .videoText(_, _, _, _, let actionItemStatus):
-                if let actionItemStatus = actionItemStatus {
-                    Text(actionItemStatus.body.uppercased())
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .font(.system(size: 10))
-                        .fontWeight(.regular)
-                    Image(systemName: actionItemStatus.logo)
-                        .font(.system(size: 10))
-                        .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .padding(.horizontal,10)
-
-                }else{
-                    EmptyView()
-                }
-            case .reply(_, _, _, let actionItemStatus):
-                if let actionItemStatus = actionItemStatus {
-                    Text(actionItemStatus.body.uppercased())
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .font(.system(size: 10))
-                        .fontWeight(.regular)
-                    Image(systemName: actionItemStatus.logo)
-                        .font(.system(size: 10))
-                        .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .padding(.horizontal,10)
-
-                }else{
-                    EmptyView()
-                }
-            case .pdf(_, _, _, _, _, let actionItemStatus):
-                if let actionItemStatus = actionItemStatus {
-                    Text(actionItemStatus.body.uppercased())
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .font(.system(size: 10))
-                        .fontWeight(.regular)
-                    Image(systemName: actionItemStatus.logo)
-                        .font(.system(size: 10))
-                        .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .padding(.horizontal,10)
-
-
-                }else{
-                    EmptyView()
-                }
-            case .audio(_, _, let actionItemStatus):
-                if let actionItemStatus = actionItemStatus {
-                    Text(actionItemStatus.body.uppercased())
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .font(.system(size: 10))
-                        .fontWeight(.regular)
-                    Image(systemName: actionItemStatus.logo)
-                        .font(.system(size: 10))
-                        .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                        .foregroundColor(actionItemStatus.foregroundColor)
-                        .padding(.horizontal,10)
-
-
-                }else{
+                    actionStatusView(for: actionItemStatus)
+                } else {
                     EmptyView()
                 }
             default:
                 EmptyView()
             }
-
         }
     }
     
@@ -404,5 +191,59 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
         }
     }
     
+    
+    private var reactionListView: some View {
+        switch message.messageKind {
+        case .text(_, _, _, _, let reactions),
+             .image(_, _, _, let reactions),
+             .imageText(_, _, _, _, _, let reactions),
+             .video(_, _, _, let reactions),
+             .videoText(_, _, _, _, _, let reactions),
+             .reply(_, _, _, _, let reactions),
+             .pdf(_, _, _, _, _, _, let reactions),
+             .audio(_, _, _, let reactions):
+
+            if let reactions = reactions, !reactions.isEmpty {
+                return AnyView(
+                    HStack(spacing: 12) {
+                        ForEach(reactions, id: \.emoji) { reaction in
+                            HStack(spacing: 4) {
+                                Text(reaction.emoji)
+                                    .font(.system(size: 12))
+                                Text("\(reaction.count)")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.black)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color.white)
+                    .clipShape(Capsule())
+                    .shadow(radius: 2)
+                )
+            }
+
+        default:
+            break
+        }
+
+        return AnyView(EmptyView())
+    }
+    
+    private func actionStatusView(for status: ActionItemStatus) -> some View {
+        HStack(spacing: 5) {
+            Text(status.body.uppercased())
+                .foregroundColor(status.foregroundColor)
+                .font(.system(size: 10))
+                .fontWeight(.regular)
+
+            Image(systemName: status.logo)
+                .font(.system(size: 10))
+                .frame(maxWidth: 8, maxHeight: 8, alignment: .center)
+                .foregroundColor(status.foregroundColor)
+                .padding(.horizontal, 10)
+        }
+    }
     
 }

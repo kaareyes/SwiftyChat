@@ -24,7 +24,7 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
         
         switch message.messageKind {
             
-        case .text(let text, let attentions, let priorityLevel, let actionStatus):
+        case .text(let text, let attentions, let priorityLevel, let actionStatus,let reactions):
             TextCell(
                 text: text,
                 attentions: attentions,
@@ -43,7 +43,7 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                 size: size
             )
             
-        case .imageText(let imageLoadingType, let text, let attentions, let priorityLevel, let actionStatus):
+        case .imageText(let imageLoadingType, let text, let attentions, let priorityLevel, let actionStatus,let reactions):
             ImageTextCell(
                 message: message,
                 attentions: attentions,
@@ -55,7 +55,7 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                 didTappedViewTask : didTappedViewTask
             )
             
-        case .image(let imageLoadingType, let priorityLevel, let actionStatus):
+        case .image(let imageLoadingType, let priorityLevel, let actionStatus,let reactions):
             ImageCell(
                 message: message,
                 imageLoadingType: imageLoadingType,
@@ -87,7 +87,7 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                 onCarouselItemAction: onCarouselItemAction
             )
             
-        case .video(let videoItem, let priorityLevel, let actionStatus):
+        case .video(let videoItem, let priorityLevel, let actionStatus,let reactions):
             VideoPlaceholderCell(
                 media: videoItem,
                 message: message,
@@ -102,10 +102,10 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
         case .systemMessage(let text):
             SystemMessageCell(text: text,message: message)
         
-        case .videoText(let videoItem, let text, let attentions, let priorityLevel, let actionStatus):
+        case .videoText(let videoItem, let text, let attentions, let priorityLevel, let actionStatus,let reactions):
             SystemMessageCell(text: text,message: message)
             
-        case .reply(let reply, let replies, let priorityLevel, let actionStatus):
+        case .reply(let reply, let replies, let priorityLevel, let actionStatus,let reactions):
             ReplyCell(message: message,
                       replies: replies,
                       reply: reply,
@@ -115,7 +115,7 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                       didTappedMedia: didTappedMedia,
                       didTappedViewTask : didTappedViewTask)
         
-        case .pdf(let image, let text, let attentions, let pdfURL, let priorityLevel, let actionStatus):
+        case .pdf(let image, let text, let attentions, let pdfURL, let priorityLevel, let actionStatus,let reactions):
             PdfTextCell(message: message,
                         attentions: attentions,
                         imageLoadingType: image,
@@ -126,7 +126,7 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                         actionStatus : actionStatus,
                         didTappedViewTask : didTappedViewTask)
             
-        case .audio(let url, let priorityLevel, let actionStatus):
+        case .audio(let url, let priorityLevel, let actionStatus,let reactions):
             
            AudioCell(message: message,
                      audioURL: url,

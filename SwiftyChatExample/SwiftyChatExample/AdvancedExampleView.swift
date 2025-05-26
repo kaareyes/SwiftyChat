@@ -40,9 +40,8 @@ struct AdvancedExampleView: View {
     }
     
     private var chatView: some View {
-
+        
         ChatView<MockMessages.ChatMessageItem, MockMessages.ChatUserItem>(inverted: true, messages: $messages) {
-
             BasicInputView(
                 message: $message,
                 isEditing: $isEditing,
@@ -58,15 +57,14 @@ struct AdvancedExampleView: View {
             .padding(.bottom, isEditing ? 0 : 8)
             .background(Color.primary.colorInvert())
             .embedInAnyView()
-            
-        }tappedResendAction: { message in
+        } tappedResendAction : { message in
             print("resend tapped message ",message.messageKind.description)
-        }didDismissKeyboard: {
+        } didDismissKeyboard : {
             print("dismiss keyboard")
-        } tappedReactionButton: {
+        } tappedReactionButton : {
             print("tapped")
         }
-        .onMessageCellTapped({ (message) in
+        .onMessageCellTapped( { (message) in
             print(message.messageKind.description)
         })
         // ▼ Optional, Present context menu when cell long pressed
@@ -91,7 +89,7 @@ struct AdvancedExampleView: View {
             self.messages.append(
                 MockMessages.ChatMessageItem(
                     user: MockMessages.sender,
-                    messageKind: .text(quickReply.title,nil, MessagePriorityLevel(rawValue: -1)!, nil),
+                    messageKind: .text(quickReply.title,nil, MessagePriorityLevel(rawValue: -1)!, nil,nil),
                     isSender: true,
                     messageUUID: UUID().uuidString
                 )
@@ -126,31 +124,27 @@ struct AdvancedExampleView: View {
         .onAppear {
    
             if let portraitUrl = URL(string: "https://picsum.photos/200/300") {
-                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .image(.remote(portraitUrl), MessagePriorityLevel(rawValue: -1)!, nil),
+                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .image(.remote(portraitUrl), MessagePriorityLevel(rawValue: -1)!, nil,nil),
                                            messageUUID: UUID().uuidString))
             }
 
             if let landscapeUrl = URL(string:"https://picsum.photos/400/200") {
-                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .image(.remote(landscapeUrl), MessagePriorityLevel(rawValue: -1)!, nil),
+                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .image(.remote(landscapeUrl), MessagePriorityLevel(rawValue: -1)!, nil,nil),
                                            messageUUID: UUID().uuidString))
             }
 
-            
             self.messages.append(
                 .init(
                     user: MockMessages.chatbot,
-                    messageKind: .text("https://github.com/EnesKaraosman/SwiftyChat and here is his phone +90 537 844 11-41, & mail: eneskaraosman53@gmail.com Today is 27 May 2020",nil, MessagePriorityLevel(rawValue: -1)!, nil),
+                    messageKind: .text("https://github.com/EnesKaraosman/SwiftyChat and here is his phone +90 537 844 11-41, & mail: eneskaraosman53@gmail.com Today is 27 May 2020",nil, MessagePriorityLevel(rawValue: -1)!, nil,nil),
                     messageUUID: UUID().uuidString
                 )
             )
-            
            // self.messages.append(contentsOf: MockMessages.generatedMessages(count: 3))
            // self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text(html1), isSender: false))
            // self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text(htmlLink), isSender: false))
-            
         }
     }
-    
 }
 
 struct ContentView_Previews: PreviewProvider {

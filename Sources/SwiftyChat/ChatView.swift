@@ -301,6 +301,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     }
     
     private func checkMessagePosition(_ message: Message) {
+        print(messages)
         guard let firstItem = self.messages.first else { return }
         guard let lastItem = self.messages.last else { return }
         

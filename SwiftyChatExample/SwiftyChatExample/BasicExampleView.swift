@@ -40,8 +40,8 @@ struct BasicExampleView: View {
     var body: some View {
         chatView
             .onAppear {
-                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("<p>Amigo Reyes</p>", ["Jett Calleja","Juan Carlos","amigo Reyes"], .attention, nil), messageUUID: UUID().uuidString))
-                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("<p>Amigo Reyes</p> https://medchat.s3.amazonaws.com/90709491-e2f0-444a-a2f0-f24543d60951dummy.pdf testing , facebook.com", ["Jett Calleja","Juan Carlos","amigo Reyes"], .attention, nil), messageUUID: UUID().uuidString))
+                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("<p>Amigo Reyes</p>", ["Jett Calleja","Juan Carlos","amigo Reyes"], .attention, nil,[MessageReaction(reactionId: "1", emoji: "🥺", count: 12),MessageReaction(reactionId: "2", emoji: "😍", count: 12)]), messageUUID: UUID().uuidString))
+                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("<p>Amigo Reyes</p> https://medchat.s3.amazonaws.com/90709491-e2f0-444a-a2f0-f24543d60951dummy.pdf testing , facebook.com", ["Jett Calleja","Juan Carlos","amigo Reyes"], .attention, nil,nil), messageUUID: UUID().uuidString))
 
 //                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("New task(s) are assigned to you on action items. \n Note: Operation Singil: si ocs", ["Jett Calleja"], .attention, .pending), messageUUID: UUID().uuidString))
 ////                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .text("New task(s) are assigned to you on action items. \n Note: Operation Singil: si ocs", ["Jett Calleja"], .medium, .pending), messageUUID: UUID().uuidString))
