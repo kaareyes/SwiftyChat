@@ -35,7 +35,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     private var reachedTop: ((_ lastDate : Date) -> Void)?
     private var reachedBottom: ((_ lastDate : Date) -> Void)?
     private var tappedResendAction : (Message) -> Void
-    private var tappedReactionButton : () -> Void
+    private var tappedReactionButton : (Message) -> Void
     private var didDismissKeyboard : () -> Void
     private var onScrollStateChanged: ((Bool) -> Void)? = nil
     private var inverted : Bool
@@ -301,7 +301,6 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     }
     
     private func checkMessagePosition(_ message: Message) {
-        print(messages)
         guard let firstItem = self.messages.first else { return }
         guard let lastItem = self.messages.last else { return }
         
@@ -430,7 +429,7 @@ public extension ChatView {
          reachedBottom: ((_ lastDate : Date) -> Void)? = nil,
          tappedResendAction : @escaping (Message) -> Void,
          didDismissKeyboard :@escaping () -> Void,
-         tappedReactionButton : @escaping () -> Void
+         tappedReactionButton : @escaping (Message) -> Void
          
     ) {
         _messages = messages

@@ -10,7 +10,7 @@ import SwiftUI
 public struct ChatNameAndTime<Message: ChatMessage>: View {
     public let message: Message
     public var tappedResendAction : (Message) -> Void
-    public var tappedReaction : () -> Void
+    public var tappedReaction : (Message) -> Void
     @State private var showReactions = false
 
     public var body: some View {
@@ -164,7 +164,7 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
     private var reactionButtonView: some View {
         ZStack {
             Button(action: {
-                self.tappedReaction()
+                self.tappedReaction(message)
             }) {
                 ZStack {
                     Image(systemName: "face.smiling") // main icon
@@ -185,7 +185,7 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
             .buttonStyle(PlainButtonStyle())
             .onLongPressGesture {
                 withAnimation {
-                    self.tappedReaction()
+                    self.tappedReaction(message)
                 }
             }
         }

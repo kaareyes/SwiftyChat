@@ -61,7 +61,7 @@ struct AdvancedExampleView: View {
             print("resend tapped message ",message.messageKind.description)
         } didDismissKeyboard : {
             print("dismiss keyboard")
-        } tappedReactionButton : {
+        } tappedReactionButton : {  message in
             print("tapped")
         }
         .onMessageCellTapped( { (message) in
