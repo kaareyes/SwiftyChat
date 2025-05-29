@@ -30,75 +30,78 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
                     
               
                 }else{
-                    reactionButtonView
-                        .padding(.trailing,2)
+                    
+                    VStack(alignment: .leading, spacing: 5){
+                        HStack(alignment: .center, spacing: 5){
+                            reactionButtonView
+                                .padding(.trailing,2)
 
-                    switch message.status {
-                    case .failed:
-                        Group {
-                            Text("Re-Send")
-                                .font(.system(size: 10))
-                                .fontWeight(.medium)
-                                .foregroundColor(.red)
-                                .italic()
-                            Image(systemName: "arrow.counterclockwise.circle")
-                                .font(.system(size: 12))
-                                .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                                .foregroundColor(.red)
-                        }
-                        .onTapGesture {
-                            self.tappedResendAction(message)
-                        }
-                        
-                    case .sending:
-                        Text("Sending... ")
-                            .font(.system(size: 10))
-                            .fontWeight(.medium)
-                            .foregroundColor(.gray)
-                            .italic()
-                        Image(systemName: "paperplane")
-                            .font(.system(size: 10))
-                            .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                            .foregroundColor(.gray)
-                        actionStatus
-                    case .sent:
-                        
-                        switch message.messageKind {
-                        case .text(_, _,  _, let actionItemStatus,let reactions),
-                            .image(_, _, let actionItemStatus,let reactions),
-                            .imageText(_, _, _, _, let actionItemStatus,let reactions),
-                            .video(_, _, let actionItemStatus,let reactions),
-                            .videoText(_, _, _, _, let actionItemStatus,let reactions),
-                            .reply(_, _, _, let actionItemStatus,let reactions),
-                            .pdf(_, _, _, _, _, let actionItemStatus,let reactions),
-                            .audio(_, _, let actionItemStatus,let reactions)
-                            
-                            :
-                            if let actionItemStatus = actionItemStatus {
-                                timeStamp
-                                Text(actionItemStatus.body.uppercased())
-                                    .foregroundColor(actionItemStatus.foregroundColor)
+                            switch message.status {
+                            case .failed:
+                                Group {
+                                    Text("Re-Send")
+                                        .font(.system(size: 10))
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.red)
+                                        .italic()
+                                    Image(systemName: "arrow.counterclockwise.circle")
+                                        .font(.system(size: 12))
+                                        .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
+                                        .foregroundColor(.red)
+                                }
+                                .onTapGesture {
+                                    self.tappedResendAction(message)
+                                }
+                                
+                            case .sending:
+                                Text("Sending... ")
                                     .font(.system(size: 10))
-                                    .fontWeight(.regular)
-                                Image(systemName: actionItemStatus.logo)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.gray)
+                                    .italic()
+                                Image(systemName: "paperplane")
                                     .font(.system(size: 10))
                                     .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                                    .foregroundColor(actionItemStatus.foregroundColor)
-                                    .padding(.horizontal,10)
+                                    .foregroundColor(.gray)
+                                actionStatus
+                            case .sent:
+                                
+                                switch message.messageKind {
+                                case .text(_, _,  _, let actionItemStatus,let reactions),
+                                    .image(_, _, let actionItemStatus,let reactions),
+                                    .imageText(_, _, _, _, let actionItemStatus,let reactions),
+                                    .video(_, _, let actionItemStatus,let reactions),
+                                    .videoText(_, _, _, _, let actionItemStatus,let reactions),
+                                    .reply(_, _, _, let actionItemStatus,let reactions),
+                                    .pdf(_, _, _, _, _, let actionItemStatus,let reactions),
+                                    .audio(_, _, let actionItemStatus,let reactions)
+                                    
+                                    :
+                                    if let actionItemStatus = actionItemStatus {
+                                        timeStamp
+                                        Text(actionItemStatus.body.uppercased())
+                                            .foregroundColor(actionItemStatus.foregroundColor)
+                                            .font(.system(size: 10))
+                                            .fontWeight(.regular)
+                                        Image(systemName: actionItemStatus.logo)
+                                            .font(.system(size: 10))
+                                            .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
+                                            .foregroundColor(actionItemStatus.foregroundColor)
+                                            .padding(.horizontal,10)
 
-                            }else{
-                                sentNormalStatus
+                                    }else{
+                                        sentNormalStatus
+                                    }
+
+                                default:
+                                    sentNormalStatus
+                                }
                             }
 
-                        default:
-                            sentNormalStatus
                         }
-                        
-                        
-                        
-                        
-
+                        reactionListView
                     }
+
                 }
             }.frame(maxWidth: .infinity, alignment: message.isSender ?  .trailing : .leading)
         }
