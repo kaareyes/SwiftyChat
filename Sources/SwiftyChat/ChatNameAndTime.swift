@@ -207,13 +207,14 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
              .audio(_, _, _, let reactions):
 
             if let reactions = reactions, !reactions.isEmpty {
+                let reactionItem = ReactionItem(reactions: reactions)
                 return AnyView(
                     HStack(spacing: 12) {
-                        ForEach(reactions, id: \.emoji) { reaction in
+                        ForEach(reactionItem.emojis, id: \.emoji) { item in
                             HStack(spacing: 4) {
-                                Text(reaction.emoji)
+                                Text(item.emoji)
                                     .font(.system(size: 12))
-                                Text("\(reaction.count)")
+                                Text("\(item.count)")
                                     .font(.system(size: 12))
                                     .foregroundColor(.black)
                             }
