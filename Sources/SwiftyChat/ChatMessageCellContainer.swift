@@ -9,7 +9,10 @@
 import SwiftUI
 
 internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
-    
+    @EnvironmentObject var style: ChatMessageCellStyle
+    private var cellStyle: TextCellStyle {
+        message.isSender ? style.outgoingTextStyle : style.incomingTextStyle
+    }
     public let message: Message
     public let size: CGSize
     
@@ -19,6 +22,8 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
     public let onCarouselItemAction: (CarouselItemButton, Message) -> Void
     public let didTappedMedia: (String) -> Void
     public let didTappedViewTask: (Message) -> Void
+    public var didTappedReaction : (Message) -> Void
+
 
     @ViewBuilder private func messageCell() -> some View {
         
@@ -140,7 +145,100 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
     }
     
     public var body: some View {
+        ZStack(alignment: .bottomLeading) {
             messageCell()
+            reactionListView
+                .offset(x: 0, y: 20) // adjust values as needed
+        }
+        .allowsHitTesting(true)
+    }
+    
+    private var reactionButtonView: some View {
+        ZStack(alignment: .bottomTrailing) {
+            Circle()
+                .fill(cellStyle.cellBackgroundColor)
+                .frame(width: 30, height: 30)
+                .overlay(
+                    Image(systemName: "face.smiling")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(.white)
+                        .padding(2)
+                )
+
+            Circle()
+                .fill(Color.gray)
+                .frame(width: 12, height: 12)
+                .overlay(
+                    Image(systemName: "plus")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(.white)
+                        .padding(2)
+                )
+                .offset(x: 2, y: 2)
+        }
+        .onTapGesture {
+            self.didTappedReaction(message)
+        }
+        .onLongPressGesture {
+            withAnimation {
+                self.didTappedReaction(message)
+            }
+        }
+        .padding(.horizontal,5)
+    }
+    
+    
+    private var reactionListView: some View {
+        switch message.messageKind {
+        case .text(_, _, _, _, let reactions),
+             .image(_, _, _, let reactions),
+             .imageText(_, _, _, _, _, let reactions),
+             .video(_, _, _, let reactions),
+             .videoText(_, _, _, _, _, let reactions),
+             .reply(_, _, _, _, let reactions),
+             .pdf(_, _, _, _, _, _, let reactions),
+             .audio(_, _, _, let reactions):
+
+            if let reactions = reactions, !reactions.isEmpty {
+                let reactionItem = ReactionItem(reactions: reactions)
+                return AnyView(
+                    HStack(spacing: 5) {
+                        ForEach(reactionItem.emojis, id: \.emoji) { item in
+                            HStack(spacing: 4) {
+                                Text(item.emoji)
+                                    .font(.system(size: 12))
+                                Text("\(item.count)")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.black)
+                            }
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 4)
+                            .background(cellStyle.cellBackgroundColor)
+                            .clipShape(Capsule())
+                            .overlay(
+                                Capsule()
+                                    .stroke(Color.white, lineWidth: 2)
+                            )
+                        }
+                        reactionButtonView
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color.clear)
+                    .clipShape(Capsule())
+                    .shadow(radius: 2)
+                )
+            }else{
+                return AnyView(reactionButtonView)
+            }
+
+        default:
+            break
+        }
+
+        return AnyView(EmptyView())
     }
     
 }

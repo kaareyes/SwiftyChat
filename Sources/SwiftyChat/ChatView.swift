@@ -112,8 +112,10 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                                                 dateHeaderShown: false
                                             )
                                             
-                                            ChatNameAndTime(message: message, tappedResendAction: self.tappedResendAction,tappedReaction: self.tappedReactionButton)
+                                            ChatNameAndTime(message: message, tappedResendAction: self.tappedResendAction)
                                                 .zIndex(1)
+                                                .padding(.top,10)
+                                            
                                             chatMessageCellContainer(in: geometry.size, with: message, with: shouldShowDisplayName)
                                                 .id(message.id)
                                                 .onAppear {
@@ -342,7 +344,9 @@ internal extension ChatView {
             onTextTappedCallback: onAttributedTextTappedCallback,
             onCarouselItemAction: onCarouselItemAction,
             didTappedMedia: didTappedMedia,
-            didTappedViewTask: didTappedViewTask
+            didTappedViewTask: didTappedViewTask,
+            didTappedReaction: self.tappedReactionButton
+            
         )
         .onTapGesture { onMessageCellTapped(message) }
         .onLongPressGesture(minimumDuration: 0.2) {

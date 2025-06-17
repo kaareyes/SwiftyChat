@@ -10,7 +10,6 @@ import SwiftUI
 public struct ChatNameAndTime<Message: ChatMessage>: View {
     public let message: Message
     public var tappedResendAction : (Message) -> Void
-    public var tappedReaction : (Message) -> Void
     @State private var showReactions = false
 
     public var body: some View {
@@ -21,11 +20,9 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
                         HStack(alignment: .center, spacing: 5){
                             timeStamp
                             actionStatus
-                            reactionButtonView
-                                .padding(.leading,2)
+
 
                         }
-                        reactionListView
                     }
                     
               
@@ -33,9 +30,6 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
                     
                     VStack(alignment: .leading, spacing: 5){
                         HStack(alignment: .center, spacing: 5){
-                            reactionButtonView
-                                .padding(.trailing,2)
-
                             switch message.status {
                             case .failed:
                                 Group {
@@ -99,7 +93,6 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
                             }
 
                         }
-                        reactionListView
                     }
 
                 }
@@ -161,78 +154,6 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
                 .foregroundColor(.blue)
                 .padding(.horizontal,10)
         }
-    }
-    
-
-    private var reactionButtonView: some View {
-        ZStack {
-            Button(action: {
-                self.tappedReaction(message)
-            }) {
-                ZStack {
-                    Image(systemName: "face.smiling") // main icon
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 17, height: 17)
-                        .foregroundColor(.gray)
-
-                    Image(systemName: "plus.circle.fill") // plus overlay
-                        .resizable()
-                        .frame(width: 10, height: 10)
-                        .foregroundColor(.blue)
-                        .background(Color.white)
-                        .clipShape(Circle())
-                        .offset(x: 7, y: 7)
-                }
-            }
-            .buttonStyle(PlainButtonStyle())
-            .onLongPressGesture {
-                withAnimation {
-                    self.tappedReaction(message)
-                }
-            }
-        }
-    }
-    
-    
-    private var reactionListView: some View {
-        switch message.messageKind {
-        case .text(_, _, _, _, let reactions),
-             .image(_, _, _, let reactions),
-             .imageText(_, _, _, _, _, let reactions),
-             .video(_, _, _, let reactions),
-             .videoText(_, _, _, _, _, let reactions),
-             .reply(_, _, _, _, let reactions),
-             .pdf(_, _, _, _, _, _, let reactions),
-             .audio(_, _, _, let reactions):
-
-            if let reactions = reactions, !reactions.isEmpty {
-                let reactionItem = ReactionItem(reactions: reactions)
-                return AnyView(
-                    HStack(spacing: 12) {
-                        ForEach(reactionItem.emojis, id: \.emoji) { item in
-                            HStack(spacing: 4) {
-                                Text(item.emoji)
-                                    .font(.system(size: 12))
-                                Text("\(item.count)")
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.black)
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(Color.white)
-                    .clipShape(Capsule())
-                    .shadow(radius: 2)
-                )
-            }
-
-        default:
-            break
-        }
-
-        return AnyView(EmptyView())
     }
     
     private func actionStatusView(for status: ActionItemStatus) -> some View {
