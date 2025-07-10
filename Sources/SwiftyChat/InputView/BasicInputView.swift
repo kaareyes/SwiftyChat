@@ -89,7 +89,7 @@ public struct BasicInputView: View {
 
     private var sendButton: some View {
         Button(action: {
-            self.onCommit?(.text(message,nil, MessagePriorityLevel(rawValue: -1)!, nil,nil))
+            self.onCommit?(.text(false, false, message,nil, MessagePriorityLevel(rawValue: -1)!, nil,nil))
             self.message.removeAll()
         }, label: {
             Circle().fill(Color(.systemBlue))

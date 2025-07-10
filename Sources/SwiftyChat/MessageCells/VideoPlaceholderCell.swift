@@ -10,7 +10,8 @@ import SwiftUI
 /// When play button is tapped, it lets videoManager know about VideoItem
 /// So manager knows when to display actual videoPlayer above `ChatView`
 internal struct VideoPlaceholderCell<Message: ChatMessage>: View {
-    
+    public let isUrgent: Bool
+    public let isAttention: Bool
     public let media: VideoItem
     public let message: Message
     public let size: CGSize
@@ -31,6 +32,15 @@ internal struct VideoPlaceholderCell<Message: ChatMessage>: View {
     
     private var imageWidth: CGFloat {
         cellStyle.cellWidth(size)
+    }
+    private var backgroundColor: Color {
+                
+       if isUrgent {
+           return BubbleColorStyle.urgentColor
+        }else if isAttention {
+            return BubbleColorStyle.attentionColor
+       }
+        return cellStyle.cellBackgroundColor
     }
     
     public var body: some View {
@@ -84,7 +94,7 @@ internal struct VideoPlaceholderCell<Message: ChatMessage>: View {
         }
         .clipped()
         .blur(radius: cellStyle.cellBlurRadius)
-        .background(cellStyle.cellBackgroundColor)
+        .background(backgroundColor)
         .cornerRadius(cellStyle.cellCornerRadius)
         .overlay(
             RoundedRectangle(cornerRadius: cellStyle.cellCornerRadius)

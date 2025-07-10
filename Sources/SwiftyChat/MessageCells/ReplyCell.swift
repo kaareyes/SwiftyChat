@@ -9,6 +9,8 @@ import SwiftUI
 
 internal struct ReplyCell<Message: ChatMessage>: View {
     @EnvironmentObject var style: ChatMessageCellStyle
+    public let isUrgent: Bool
+    public let isAttention: Bool
     public let message: Message
     public let replies : [any ReplyItem]
     public let reply : any ReplyItem
@@ -21,6 +23,17 @@ internal struct ReplyCell<Message: ChatMessage>: View {
     private var cellStyle: TextCellStyle {
         message.isSender ? style.outgoingTextStyle : style.incomingTextStyle
     }
+    
+    private var backgroundColor: Color {
+                
+       if isUrgent {
+           return BubbleColorStyle.urgentColor
+        }else if isAttention {
+            return BubbleColorStyle.attentionColor
+       }
+        return cellStyle.cellBackgroundColor
+    }
+    
     
     var body: some View {
         
@@ -45,6 +58,8 @@ internal struct ReplyCell<Message: ChatMessage>: View {
                     switch reply.fileType {
                     case .video:
                         ImageCell(
+                            isUrgent:false,
+                            isAttention:false,
                             message: message,
                             imageLoadingType: ImageLoadingKind.remote(URL(string: reply.thumbnailURL!)!),
                             size: size,
@@ -64,6 +79,8 @@ internal struct ReplyCell<Message: ChatMessage>: View {
                         )
                     case .image:
                         ImageCell(
+                            isUrgent:false,
+                            isAttention:false,
                             message: message,
                             imageLoadingType: ImageLoadingKind.remote(URL(string: reply.thumbnailURL!)!),
                             size: size,
@@ -84,6 +101,8 @@ internal struct ReplyCell<Message: ChatMessage>: View {
                         .padding(.top,10)
                     case .pdf:
                         ImageCell(
+                            isUrgent:false,
+                            isAttention:false,
                             message: message,
                             imageLoadingType: ImageLoadingKind.remote(URL(string: reply.thumbnailURL!)!),
                             size: size, 
@@ -150,7 +169,7 @@ internal struct ReplyCell<Message: ChatMessage>: View {
         }
            
             .padding(cellStyle.textPadding)
-            .background(cellStyle.cellBackgroundColor)
+            .background(backgroundColor)
 
             .clipShape(RoundedCornerShape(radius: cellStyle.cellCornerRadius, corners: cellStyle.cellRoundedCorners))
             .overlay(

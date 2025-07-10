@@ -29,8 +29,10 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
         
         switch message.messageKind {
             
-        case .text(let text, let attentions, let priorityLevel, let actionStatus,let reactions):
+        case .text(let isUrgent, let isAttention,let text, let attentions, let priorityLevel, let actionStatus,let reactions):
             TextCell(
+                isUrgent: isUrgent,
+                isAttention: isAttention,
                 text: text,
                 attentions: attentions,
                 message: message,
@@ -48,8 +50,10 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                 size: size
             )
             
-        case .imageText(let imageLoadingType, let text, let attentions, let priorityLevel, let actionStatus,let reactions):
+        case .imageText(let isUrgent, let isAttention,let imageLoadingType, let text, let attentions, let priorityLevel, let actionStatus,let reactions):
             ImageTextCell(
+                isUrgent: isUrgent,
+                isAttention: isAttention,
                 message: message,
                 attentions: attentions,
                 imageLoadingType: imageLoadingType,
@@ -60,8 +64,10 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                 didTappedViewTask : didTappedViewTask
             )
             
-        case .image(let imageLoadingType, let priorityLevel, let actionStatus,let reactions):
+        case .image(let isUrgent, let isAttention,let imageLoadingType, let priorityLevel, let actionStatus,let reactions):
             ImageCell(
+                isUrgent: isUrgent,
+                isAttention: isAttention,
                 message: message,
                 imageLoadingType: imageLoadingType,
                 size: size,
@@ -92,8 +98,10 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                 onCarouselItemAction: onCarouselItemAction
             )
             
-        case .video(let videoItem, let priorityLevel, let actionStatus,let reactions):
+        case .video(let isUrgent, let isAttention,let videoItem, let priorityLevel, let actionStatus,let reactions):
             VideoPlaceholderCell(
+                isUrgent: isUrgent,
+                isAttention: isAttention,
                 media: videoItem,
                 message: message,
                 size: size,
@@ -107,11 +115,13 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
         case .systemMessage(let text):
             SystemMessageCell(text: text,message: message)
         
-        case .videoText(let videoItem, let text, let attentions, let priorityLevel, let actionStatus,let reactions):
+        case .videoText(let isUrgent, let isAttention,let videoItem, let text, let attentions, let priorityLevel, let actionStatus,let reactions):
             SystemMessageCell(text: text,message: message)
             
-        case .reply(let reply, let replies, let priorityLevel, let actionStatus,let reactions):
-            ReplyCell(message: message,
+        case .reply(let isUrgent, let isAttention,let reply, let replies, let priorityLevel, let actionStatus,let reactions):
+            ReplyCell(isUrgent: isUrgent,
+                      isAttention: isAttention,
+                      message: message,
                       replies: replies,
                       reply: reply,
                       size: size,
@@ -120,8 +130,10 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                       didTappedMedia: didTappedMedia,
                       didTappedViewTask : didTappedViewTask)
         
-        case .pdf(let image, let text, let attentions, let pdfURL, let priorityLevel, let actionStatus,let reactions):
-            PdfTextCell(message: message,
+        case .pdf(let isUrgent, let isAttention,let image, let text, let attentions, let pdfURL, let priorityLevel, let actionStatus,let reactions):
+            PdfTextCell(isUrgent: isUrgent,
+                        isAttention: isAttention,
+                        message: message,
                         attentions: attentions,
                         imageLoadingType: image,
                         pdfURL: pdfURL,
@@ -131,9 +143,11 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                         actionStatus : actionStatus,
                         didTappedViewTask : didTappedViewTask)
             
-        case .audio(let url, let priorityLevel, let actionStatus,let reactions):
+        case .audio(let isUrgent, let isAttention,let url, let priorityLevel, let actionStatus,let reactions):
             
-           AudioCell(message: message,
+           AudioCell(isUrgent: isUrgent,
+                     isAttention: isAttention,
+                     message: message,
                      audioURL: url,
                      size: size,
                      priority: priorityLevel,
@@ -192,14 +206,14 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
     
     private var reactionListView: some View {
         switch message.messageKind {
-        case .text(_, _, _, _, let reactions),
-             .image(_, _, _, let reactions),
-             .imageText(_, _, _, _, _, let reactions),
-             .video(_, _, _, let reactions),
-             .videoText(_, _, _, _, _, let reactions),
-             .reply(_, _, _, _, let reactions),
-             .pdf(_, _, _, _, _, _, let reactions),
-             .audio(_, _, _, let reactions):
+        case .text(_, _,_, _, _, _, let reactions),
+             .image(_, _,_, _, _, let reactions),
+             .imageText(_, _,_, _, _, _, _, let reactions),
+             .video(_, _,_, _, _, let reactions),
+             .videoText(_, _,_, _, _, _, _, let reactions),
+             .reply(_, _,_, _, _, _, let reactions),
+             .pdf(_, _,_, _, _, _, _, _, let reactions),
+             .audio(_, _,_, _, _, let reactions):
 
             if let reactions = reactions, !reactions.isEmpty {
                 let reactionItem = ReactionItem(reactions: reactions)

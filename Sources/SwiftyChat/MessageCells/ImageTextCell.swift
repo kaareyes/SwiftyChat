@@ -9,7 +9,8 @@
 import SwiftUI
 
 internal struct ImageTextCell<Message: ChatMessage>: View {
-    
+    public let isUrgent: Bool
+    public let isAttention: Bool
     public let message: Message
     public let attentions: [String]?
     public let imageLoadingType: ImageLoadingKind
@@ -21,6 +22,16 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
     @State private var showFullText = false
 
     @EnvironmentObject var style: ChatMessageCellStyle
+    
+    private var backgroundColor: Color {
+                
+       if isUrgent {
+           return BubbleColorStyle.urgentColor
+        }else if isAttention {
+            return BubbleColorStyle.attentionColor
+       }
+        return cellStyle.cellBackgroundColor
+    }
     
     @available(iOS 15, *)
     private var formattedTagString : AttributedString {
@@ -156,7 +167,7 @@ internal struct ImageTextCell<Message: ChatMessage>: View {
                 }
             }
         }
-            .background(cellStyle.cellBackgroundColor)
+            .background(backgroundColor)
             .clipShape(RoundedCornerShape(radius: cellStyle.cellCornerRadius, corners: cellStyle.cellRoundedCorners))
             .overlay(
                 RoundedCornerShape(radius: cellStyle.cellCornerRadius, corners: cellStyle.cellRoundedCorners)

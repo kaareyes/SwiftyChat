@@ -10,6 +10,8 @@ import SwiftUI
 
 internal struct TextCell<Message: ChatMessage>: View {
     
+    public let isUrgent: Bool
+    public let isAttention: Bool
     public let text: String
     public let attentions : [String]?
     public let message: Message
@@ -39,7 +41,15 @@ internal struct TextCell<Message: ChatMessage>: View {
     }
     
     
-    
+    private var backgroundColor: Color {
+                
+       if isUrgent {
+           return BubbleColorStyle.urgentColor
+        }else if isAttention {
+            return BubbleColorStyle.attentionColor
+       }
+        return cellStyle.cellBackgroundColor
+    }
     
     
     private var showMore : some View {
@@ -74,7 +84,6 @@ internal struct TextCell<Message: ChatMessage>: View {
                 showMore
             }
             HStack(){
-                
                 if let status = actionStatus {
                     PriorityMessageViewStyle(priorityLevel: priority)
                         .padding(.bottom,10)
@@ -104,7 +113,7 @@ internal struct TextCell<Message: ChatMessage>: View {
             
             
         }
-        .background(cellStyle.cellBackgroundColor)
+        .background(backgroundColor)
         .clipShape(RoundedCornerShape(radius: cellStyle.cellCornerRadius, corners: cellStyle.cellRoundedCorners))
         .overlay(
             
@@ -160,7 +169,7 @@ internal struct TextCell<Message: ChatMessage>: View {
                 }
             }
         }
-        .background(cellStyle.cellBackgroundColor)
+        .background(backgroundColor)
         .clipShape(RoundedCornerShape(radius: cellStyle.cellCornerRadius, corners: cellStyle.cellRoundedCorners))
         .overlay(
             
@@ -263,7 +272,7 @@ internal struct TextCell<Message: ChatMessage>: View {
             }
             
         }
-        .background(cellStyle.cellBackgroundColor)
+        .background(backgroundColor)
         .clipShape(RoundedCornerShape(radius: cellStyle.cellCornerRadius, corners: cellStyle.cellRoundedCorners))
         .overlay(
             
@@ -283,6 +292,7 @@ internal struct TextCell<Message: ChatMessage>: View {
         if let attentions = attentions, attentions.count > 0 {
             if #available(iOS 15, *) {
                 defaultAttentionText
+                
             } else {
                 defaultText
             }
@@ -293,10 +303,10 @@ internal struct TextCell<Message: ChatMessage>: View {
                 defaultText
             }
         }
-        
-        
-        
+                
     }
+    
+    
 }
 
 internal struct AttributedTextPhone: Hashable {

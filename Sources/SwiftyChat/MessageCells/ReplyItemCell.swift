@@ -122,7 +122,7 @@ struct ReplyItemCell<Message: ChatMessage>: View {
 
                 }
                 if let thumbnailURL = reply.thumbnailURL, !thumbnailURL.isEmpty {
-                                  ImageCell(
+                                ImageCell(isUrgent:false,isAttention:false,
                                       message: message,
                                       imageLoadingType: ImageLoadingKind.remote(URL(string: thumbnailURL)!),
                                       size: size,
@@ -134,7 +134,7 @@ struct ReplyItemCell<Message: ChatMessage>: View {
                                   )
                     
                               }else if let photo = UIImage(systemName: "photo"){
-                                  ImageCell(
+                                  ImageCell(isUrgent:false,isAttention:false,
                                       message: message,
                                       imageLoadingType: ImageLoadingKind.local(photo),
                                       size: size,

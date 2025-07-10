@@ -61,14 +61,14 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
                             case .sent:
                                 
                                 switch message.messageKind {
-                                case .text(_, _,  _, let actionItemStatus,let reactions),
-                                    .image(_, _, let actionItemStatus,let reactions),
-                                    .imageText(_, _, _, _, let actionItemStatus,let reactions),
-                                    .video(_, _, let actionItemStatus,let reactions),
-                                    .videoText(_, _, _, _, let actionItemStatus,let reactions),
-                                    .reply(_, _, _, let actionItemStatus,let reactions),
-                                    .pdf(_, _, _, _, _, let actionItemStatus,let reactions),
-                                    .audio(_, _, let actionItemStatus,let reactions)
+                                case .text(_, _,_, _,  _, let actionItemStatus,let reactions),
+                                    .image(_, _,_, _, let actionItemStatus,let reactions),
+                                    .imageText(_, _,_, _, _, _, let actionItemStatus,let reactions),
+                                    .video(_, _,_, _, let actionItemStatus,let reactions),
+                                    .videoText(_, _,_, _, _, _, let actionItemStatus,let reactions),
+                                    .reply(_, _,_, _, _, let actionItemStatus,let reactions),
+                                    .pdf(_, _,_, _, _, _, _, let actionItemStatus,let reactions),
+                                    .audio(_, _,_, _, let actionItemStatus,let reactions)
                                     
                                     :
                                     if let actionItemStatus = actionItemStatus {
@@ -122,14 +122,14 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
             }
 
             switch message.messageKind {
-            case .text(_, _, _, let actionItemStatus, _),
-                 .image(_, _, let actionItemStatus, _),
-                 .imageText(_, _, _, _, let actionItemStatus, _),
-                 .video(_, _, let actionItemStatus, _),
-                 .videoText(_, _, _, _, let actionItemStatus, _),
-                 .reply(_, _, _, let actionItemStatus, _),
-                 .pdf(_, _, _, _, _, let actionItemStatus, _),
-                 .audio(_, _, let actionItemStatus, _):
+            case .text(_, _,_, _, _, let actionItemStatus, _),
+                 .image(_, _,_, _, let actionItemStatus, _),
+                 .imageText(_, _,_, _, _, _, let actionItemStatus, _),
+                 .video(_, _,_, _, let actionItemStatus, _),
+                 .videoText(_, _,_, _, _, _, let actionItemStatus, _),
+                 .reply(_, _,_, _, _, let actionItemStatus, _),
+                 .pdf(_, _,_, _, _, _, _, let actionItemStatus, _),
+                 .audio(_, _,_, _, let actionItemStatus, _):
                 if let actionItemStatus = actionItemStatus {
                     actionStatusView(for: actionItemStatus)
                 } else {

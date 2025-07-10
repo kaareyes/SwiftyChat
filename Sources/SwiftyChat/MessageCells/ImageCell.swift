@@ -74,7 +74,8 @@ internal struct ImageLoadingKindCell: View {
 }
 
 internal struct ImageCell<Message: ChatMessage>: View {
-    
+    public let isUrgent: Bool
+    public let isAttention: Bool
     public let message: Message
     public let imageLoadingType: ImageLoadingKind
     public let size: CGSize
@@ -90,6 +91,16 @@ internal struct ImageCell<Message: ChatMessage>: View {
     
     private var cellStyle: ImageCellStyle {
         style.imageCellStyle
+    }
+    
+    private var backgroundColor: Color {
+                
+       if isUrgent {
+           return BubbleColorStyle.urgentColor
+        }else if isAttention {
+            return BubbleColorStyle.attentionColor
+       }
+        return cellStyle.cellBackgroundColor
     }
     
     @ViewBuilder private var imageView: some View {
@@ -142,7 +153,7 @@ internal struct ImageCell<Message: ChatMessage>: View {
                 }
             }
         }
-        .background(cellStyle.cellBackgroundColor)
+        .background(backgroundColor)
         .cornerRadius(cellStyle.cellCornerRadius)
         .overlay(
             RoundedRectangle(cornerRadius: cellStyle.cellCornerRadius)

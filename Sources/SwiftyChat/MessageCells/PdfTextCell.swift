@@ -8,7 +8,8 @@
 import SwiftUI
 
 internal struct PdfTextCell<Message: ChatMessage>: View {
-    
+    public let isUrgent: Bool
+    public let isAttention: Bool
     public let message: Message
     public let attentions: [String]?
     public let imageLoadingType: ImageLoadingKind
@@ -64,6 +65,16 @@ internal struct PdfTextCell<Message: ChatMessage>: View {
         }
     }
 
+    private var backgroundColor: Color {
+                
+       if isUrgent {
+           return BubbleColorStyle.urgentColor
+        }else if isAttention {
+            return BubbleColorStyle.attentionColor
+       }
+        return cellStyle.cellBackgroundColor
+    }
+    
     
     private var imageWidth: CGFloat {
         cellStyle.cellWidth(size)
@@ -148,7 +159,7 @@ internal struct PdfTextCell<Message: ChatMessage>: View {
                 }
 
             }
-                .background(cellStyle.cellBackgroundColor)
+                .background(backgroundColor)
                 
                 .clipShape(RoundedCornerShape(radius: cellStyle.cellCornerRadius, corners: cellStyle.cellRoundedCorners))
                 .overlay(
@@ -194,7 +205,7 @@ internal struct PdfTextCell<Message: ChatMessage>: View {
                     }
                 }
             }
-            .background(cellStyle.cellBackgroundColor)
+            .background(backgroundColor)
             .cornerRadius(cellStyle.cellCornerRadius)
             .overlay(
                 RoundedRectangle(cornerRadius: cellStyle.cellCornerRadius)
