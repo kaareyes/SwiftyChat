@@ -173,24 +173,13 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                 .fill(cellStyle.cellBackgroundColor)
                 .frame(width: 30, height: 30)
                 .overlay(
-                    Image(systemName: "face.smiling")
+                    Image(systemName: "plus.circle.fill")
                         .resizable()
                         .scaledToFit()
                         .foregroundColor(.white)
                         .padding(2)
                 )
 
-            Circle()
-                .fill(Color.gray)
-                .frame(width: 12, height: 12)
-                .overlay(
-                    Image(systemName: "plus")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(.white)
-                        .padding(2)
-                )
-                .offset(x: 2, y: 2)
         }
         .onTapGesture {
             self.didTappedReaction(message)
