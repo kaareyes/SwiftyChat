@@ -89,6 +89,7 @@ public struct MockMessages {
         public var isSender: Bool
         public var date: Date
         public var status: SendStatus
+        public var mediaId: String?
 
         public init(
             objectId : String = UUID().uuidString,
@@ -97,7 +98,8 @@ public struct MockMessages {
             isSender: Bool = false,
             date: Date = .init(),
             status : SendStatus = .sent,
-            messageUUID : String
+            messageUUID : String,
+            mediaId: String? = nil
         ) {
             self.objectId = objectId
             self.user = user
@@ -106,6 +108,7 @@ public struct MockMessages {
             self.date = date
             self.status = status
             self.messageUUID = messageUUID
+            self.mediaId = mediaId
         }
     }
     
