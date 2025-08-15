@@ -20,7 +20,7 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
     public let contactFooterSection: (ContactItem, Message) -> [ContactCellButton]
     public let onTextTappedCallback: () -> AttributedTextTappedCallback
     public let onCarouselItemAction: (CarouselItemButton, Message) -> Void
-    public let didTappedMedia: (String) -> Void
+    public let didTappedMedia: (String,Message) -> Void
     public let didTappedViewTask: (Message) -> Void
     public var didTappedReaction : (Message) -> Void
 

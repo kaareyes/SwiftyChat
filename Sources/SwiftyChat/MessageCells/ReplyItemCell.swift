@@ -14,7 +14,7 @@ struct ReplyItemCell<Message: ChatMessage>: View {
     public let size: CGSize
     public let priority: MessagePriorityLevel
 
-    public let didTappedMedia: ((String) -> Void)
+    public let didTappedMedia: ((String,Message) -> Void)
     private var cellStyle: TextCellStyle {
         message.isSender ? style.outgoingTextStyle : style.incomingTextStyle
     }
@@ -29,7 +29,7 @@ struct ReplyItemCell<Message: ChatMessage>: View {
                    TapGesture()
                        .onEnded {
                            if let url = self.reply.fileURL {
-                               self.didTappedMedia(url)
+                               self.didTappedMedia(url,message)
                            }
                        }
                )
@@ -39,7 +39,7 @@ struct ReplyItemCell<Message: ChatMessage>: View {
                    TapGesture()
                        .onEnded {
                            if let url = self.reply.fileURL {
-                               self.didTappedMedia(url)
+                               self.didTappedMedia(url,message)
                            }
                        }
                )
@@ -49,7 +49,7 @@ struct ReplyItemCell<Message: ChatMessage>: View {
                    TapGesture()
                        .onEnded {
                            if let url = self.reply.fileURL {
-                               self.didTappedMedia(url)
+                               self.didTappedMedia(url,message)
                            }
                        }
                )
