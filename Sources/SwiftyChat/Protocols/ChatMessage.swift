@@ -22,5 +22,6 @@ public protocol ChatMessage: Identifiable {
     var status: SendStatus { get }
     /// The date message sent.
     var date: Date { get }
-    
+    var mediaId: String? { get }
+
 }
