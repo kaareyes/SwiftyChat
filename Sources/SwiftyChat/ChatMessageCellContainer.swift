@@ -29,7 +29,7 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
         
         switch message.messageKind {
             
-        case .text(let isUrgent, let isAttention,let text, let attentions, let priorityLevel, let actionStatus,let reactions):
+        case .text(let isUrgent, let isAttention,let text, let attentions, let priorityLevel, let actionStatus,let reactions , let followUp):
             TextCell(
                 isUrgent: isUrgent,
                 isAttention: isAttention,
@@ -50,7 +50,7 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                 size: size
             )
             
-        case .imageText(let isUrgent, let isAttention,let imageLoadingType, let text, let attentions, let priorityLevel, let actionStatus,let reactions):
+        case .imageText(let isUrgent, let isAttention,let imageLoadingType, let text, let attentions, let priorityLevel, let actionStatus,let reactions, let followUp):
             ImageTextCell(
                 isUrgent: isUrgent,
                 isAttention: isAttention,
@@ -64,7 +64,7 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                 didTappedViewTask : didTappedViewTask
             )
             
-        case .image(let isUrgent, let isAttention,let imageLoadingType, let priorityLevel, let actionStatus,let reactions):
+        case .image(let isUrgent, let isAttention,let imageLoadingType, let priorityLevel, let actionStatus,let reactions, let followUp):
             ImageCell(
                 isUrgent: isUrgent,
                 isAttention: isAttention,
@@ -98,7 +98,7 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                 onCarouselItemAction: onCarouselItemAction
             )
             
-        case .video(let isUrgent, let isAttention,let videoItem, let priorityLevel, let actionStatus,let reactions):
+        case .video(let isUrgent, let isAttention,let videoItem, let priorityLevel, let actionStatus,let reactions, let followUp):
             VideoPlaceholderCell(
                 isUrgent: isUrgent,
                 isAttention: isAttention,
@@ -115,10 +115,10 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
         case .systemMessage(let text):
             SystemMessageCell(text: text,message: message)
         
-        case .videoText(let isUrgent, let isAttention,let videoItem, let text, let attentions, let priorityLevel, let actionStatus,let reactions):
+        case .videoText(let isUrgent, let isAttention,let videoItem, let text, let attentions, let priorityLevel, let actionStatus,let reactions, let followUp):
             SystemMessageCell(text: text,message: message)
             
-        case .reply(let isUrgent, let isAttention,let reply, let replies, let priorityLevel, let actionStatus,let reactions):
+        case .reply(let isUrgent, let isAttention,let reply, let replies, let priorityLevel, let actionStatus,let reactions, let followUp):
             ReplyCell(isUrgent: isUrgent,
                       isAttention: isAttention,
                       message: message,
@@ -130,7 +130,7 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                       didTappedMedia: didTappedMedia,
                       didTappedViewTask : didTappedViewTask)
         
-        case .pdf(let isUrgent, let isAttention,let image, let text, let attentions, let pdfURL, let priorityLevel, let actionStatus,let reactions):
+        case .pdf(let isUrgent, let isAttention,let image, let text, let attentions, let pdfURL, let priorityLevel, let actionStatus,let reactions, let followUp):
             PdfTextCell(isUrgent: isUrgent,
                         isAttention: isAttention,
                         message: message,
@@ -143,7 +143,7 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                         actionStatus : actionStatus,
                         didTappedViewTask : didTappedViewTask)
             
-        case .audio(let isUrgent, let isAttention,let url, let priorityLevel, let actionStatus,let reactions):
+        case .audio(let isUrgent, let isAttention,let url, let priorityLevel, let actionStatus,let reactions,let followUp):
             
            AudioCell(isUrgent: isUrgent,
                      isAttention: isAttention,
@@ -193,16 +193,45 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
     }
     
     
+    private var followupbutton: some View {
+        HStack(spacing: 6) {
+            // "Follow up" pill
+            Text("Follow up")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(.black)
+                .padding(.vertical, 4)
+                .padding(.horizontal, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .stroke(cellStyle.cellBackgroundColor, lineWidth: 1)
+                        )
+                )
+        }
+        .padding(.horizontal, 5)
+        .onTapGesture {
+            self.didTappedReaction(message)
+        }
+        .onLongPressGesture {
+            withAnimation {
+                self.didTappedReaction(message)
+            }
+        }
+    }
+    
+    
     private var reactionListView: some View {
         switch message.messageKind {
-        case .text(_, _,_, _, _, _, let reactions),
-             .image(_, _,_, _, _, let reactions),
-             .imageText(_, _,_, _, _, _, _, let reactions),
-             .video(_, _,_, _, _, let reactions),
-             .videoText(_, _,_, _, _, _, _, let reactions),
-             .reply(_, _,_, _, _, _, let reactions),
-             .pdf(_, _,_, _, _, _, _, _, let reactions),
-             .audio(_, _,_, _, _, let reactions):
+        case .text(_, _,_, _, _, _, let reactions,let isFollowUP),
+             .image(_, _,_, _, _, let reactions,let isFollowUP),
+             .imageText(_, _,_, _, _, _, _, let reactions,let isFollowUP),
+             .video(_, _,_, _, _, let reactions,let isFollowUP),
+             .videoText(_, _,_, _, _, _, _, let reactions,let isFollowUP),
+             .reply(_, _,_, _, _, _, let reactions,let isFollowUP),
+             .pdf(_, _,_, _, _, _, _, _, let reactions,let isFollowUP),
+             .audio(_, _,_, _, _, let reactions,let isFollowUP):
 
             if let reactions = reactions, !reactions.isEmpty {
                 let reactionItem = ReactionItem(reactions: reactions)
@@ -226,6 +255,10 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                             )
                         }
                         reactionButtonView
+                        if isFollowUP {
+                            followupbutton
+                        }
+                        
                     }
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
@@ -234,7 +267,12 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                     .shadow(radius: 2)
                 )
             }else{
-                return AnyView(reactionButtonView)
+                return AnyView(HStack(spacing: 5) {
+                    reactionButtonView
+                    if isFollowUP {
+                        followupbutton
+                    }
+                })
             }
 
         default:

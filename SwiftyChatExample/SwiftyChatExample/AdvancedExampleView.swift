@@ -89,7 +89,7 @@ struct AdvancedExampleView: View {
             self.messages.append(
                 MockMessages.ChatMessageItem(
                     user: MockMessages.sender,
-                    messageKind: .text(false,false,quickReply.title,nil, MessagePriorityLevel(rawValue: -1)!, nil,nil),
+                    messageKind: .text(false,false,quickReply.title,nil, MessagePriorityLevel(rawValue: -1)!, nil,nil,false),
                     isSender: true,
                     messageUUID: UUID().uuidString
                 )
@@ -124,19 +124,19 @@ struct AdvancedExampleView: View {
         .onAppear {
    
             if let portraitUrl = URL(string: "https://picsum.photos/200/300") {
-                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .image(false,false,.remote(portraitUrl), MessagePriorityLevel(rawValue: -1)!, nil,nil),
+                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .image(false,false,.remote(portraitUrl), MessagePriorityLevel(rawValue: -1)!, nil,nil,false),
                                            messageUUID: UUID().uuidString))
             }
 
             if let landscapeUrl = URL(string:"https://picsum.photos/400/200") {
-                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .image(false,false,.remote(landscapeUrl), MessagePriorityLevel(rawValue: -1)!, nil,nil),
+                self.messages.append(.init(user: MockMessages.chatbot, messageKind: .image(false,false,.remote(landscapeUrl), MessagePriorityLevel(rawValue: -1)!, nil,nil,false),
                                            messageUUID: UUID().uuidString))
             }
 
             self.messages.append(
                 .init(
                     user: MockMessages.chatbot,
-                    messageKind: .text(false,false,"https://github.com/EnesKaraosman/SwiftyChat and here is his phone +90 537 844 11-41, & mail: eneskaraosman53@gmail.com Today is 27 May 2020",nil, MessagePriorityLevel(rawValue: -1)!, nil,nil),
+                    messageKind: .text(false,false,"https://github.com/EnesKaraosman/SwiftyChat and here is his phone +90 537 844 11-41, & mail: eneskaraosman53@gmail.com Today is 27 May 2020",nil, MessagePriorityLevel(rawValue: -1)!, nil,nil,false),
                     messageUUID: UUID().uuidString
                 )
             )
