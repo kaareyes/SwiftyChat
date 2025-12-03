@@ -36,6 +36,7 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
     private var reachedBottom: ((_ lastDate : Date) -> Void)?
     private var tappedResendAction : (Message) -> Void
     private var tappedReactionButton : (Message) -> Void
+    private var tappedFollowUpButton: (Message) -> Void
     private var didDismissKeyboard : () -> Void
     private var onScrollStateChanged: ((Bool) -> Void)? = nil
     private var inverted : Bool
@@ -345,7 +346,8 @@ internal extension ChatView {
             onCarouselItemAction: onCarouselItemAction,
             didTappedMedia: didTappedMedia,
             didTappedViewTask: didTappedViewTask,
-            didTappedReaction: self.tappedReactionButton
+            didTappedReaction: self.tappedReactionButton,
+            didTappedFollowUp: self.tappedFollowUpButton
             
         )
         .onTapGesture { onMessageCellTapped(message) }
@@ -433,8 +435,9 @@ public extension ChatView {
          reachedBottom: ((_ lastDate : Date) -> Void)? = nil,
          tappedResendAction : @escaping (Message) -> Void,
          didDismissKeyboard :@escaping () -> Void,
-         tappedReactionButton : @escaping (Message) -> Void
-         
+         tappedReactionButton : @escaping (Message) -> Void,
+         tappedFollowUpButton : @escaping (Message) -> Void
+
     ) {
         _messages = messages
         self.inputView = inputView
@@ -446,6 +449,7 @@ public extension ChatView {
         self.reachedBottom = reachedBottom
         self.tappedResendAction = tappedResendAction
         self.tappedReactionButton = tappedReactionButton
+        self.tappedFollowUpButton = tappedFollowUpButton
         self.didDismissKeyboard = didDismissKeyboard
         _scrollTo = scrollTo
         _hasMore = hasMore

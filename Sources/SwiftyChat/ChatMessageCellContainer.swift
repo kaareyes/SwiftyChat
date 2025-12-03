@@ -23,6 +23,7 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
     public let didTappedMedia: (String,Message) -> Void
     public let didTappedViewTask: (Message) -> Void
     public var didTappedReaction : (Message) -> Void
+    public var didTappedFollowUp : (Message) -> Void
 
 
     @ViewBuilder private func messageCell() -> some View {
@@ -212,11 +213,11 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
         }
         .padding(.horizontal, 5)
         .onTapGesture {
-            self.didTappedReaction(message)
+            self.didTappedFollowUp(message)
         }
         .onLongPressGesture {
             withAnimation {
-                self.didTappedReaction(message)
+                self.didTappedFollowUp(message)
             }
         }
     }
