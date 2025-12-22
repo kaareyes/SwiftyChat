@@ -106,6 +106,20 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                                                 .onAppear {
                                                     self.checkMessagePosition(message)
                                                 }
+                                        case .isTyping:
+                                            TypingCell(message: message)
+                                                .modifier(
+                                                    AvatarModifier<Message, User>(
+                                                        message: message,
+                                                        showAvatarForMessage: shouldShowAvatarForMessage(
+                                                            forThisMessage: true
+                                                        )
+                                                    )
+                                                )
+                                                .modifier(MessageHorizontalSpaceModifier(messageKind: message.messageKind, isSender: message.isSender))
+                                                .modifier(CellEdgeInsetsModifier(isSender: message.isSender))
+                                                .id(message.id)
+
                                         default:
                                             let shouldShowDisplayName = shouldShowDisplayName(
                                                 messages: messages,

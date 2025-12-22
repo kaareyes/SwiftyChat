@@ -132,6 +132,9 @@ public enum ChatMessageKind: CustomStringConvertible {
 
     /// Loading indicator contained in chat bubble
     case loading
+
+    /// Typing indicator bubble (e.g. "User is typing...")
+    case isTyping
     
     case systemMessage(String)
     
@@ -173,6 +176,8 @@ public enum ChatMessageKind: CustomStringConvertible {
             return "MessageKind.video(url: \(videoItem.url))"
         case .loading:
             return "MessageKind.loading"
+        case .isTyping:
+            return "MessageKind.isTyping"
         case .systemMessage(let message):
             return "MessageKind.systemMessage \(message)"
         case .videoText(let isUrgent, let isAttention,let videoItem,let text,let attentions, _, _,let reactions,let isFollowup):

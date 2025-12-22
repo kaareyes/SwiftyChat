@@ -155,6 +155,8 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                      actionStatus:actionStatus,
                      didTappedViewTask:didTappedViewTask)
 
+        case .isTyping:
+            TypingCell(message: message)
         }
         
     }
