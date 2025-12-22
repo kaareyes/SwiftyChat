@@ -95,6 +95,21 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
             ScrollView(.vertical, showsIndicators: false) {
                     ScrollViewReader { proxy in
                         LazyVStack {
+                            // typing view
+                            if let message = self.displayTypingMessageOnly(messages: messages) {
+                                TypingCell(message: message)
+                                    .modifier(
+                                        AvatarModifier<Message, User>(
+                                            message: message,
+                                            showAvatarForMessage: shouldShowAvatarForMessage(
+                                                forThisMessage: true
+                                            )
+                                        )
+                                    )
+                                    .modifier(MessageHorizontalSpaceModifier(messageKind: message.messageKind, isSender: message.isSender))
+                                    .modifier(CellEdgeInsetsModifier(isSender: message.isSender))
+                                    .id(message.id)
+                            }
                             ForEach(groupedMessagesByDate(messages: messages), id: \.date) { group in
                                 
                                 ForEach(group.messages) { message in
@@ -106,20 +121,6 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                                                 .onAppear {
                                                     self.checkMessagePosition(message)
                                                 }
-                                        case .isTyping:
-                                            TypingCell(message: message)
-                                                .modifier(
-                                                    AvatarModifier<Message, User>(
-                                                        message: message,
-                                                        showAvatarForMessage: shouldShowAvatarForMessage(
-                                                            forThisMessage: true
-                                                        )
-                                                    )
-                                                )
-                                                .modifier(MessageHorizontalSpaceModifier(messageKind: message.messageKind, isSender: message.isSender))
-                                                .modifier(CellEdgeInsetsModifier(isSender: message.isSender))
-                                                .id(message.id)
-
                                         default:
                                             let shouldShowDisplayName = shouldShowDisplayName(
                                                 messages: messages,
@@ -156,11 +157,12 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                                     }
                                     .rotationEffect(Angle(degrees: 180)).scaleEffect(x:  -1.0, y: 1.0, anchor: .center)
                                 }
-                                
                                 Text(group.date.generateHeaderTimestamp())
                                     .font(.system(size: 14, weight: .medium, design: .default))
                                     .foregroundColor(Color.secondary)
                                     .rotationEffect(Angle(degrees: 180)).scaleEffect(x:  -1.0, y: 1.0, anchor: .center)
+
+                                
                             }
                             
                             Group {
@@ -308,10 +310,29 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
         
     }
     
+    func displayTypingMessageOnly(messages: [Message]) -> Message? {
+        // Return the latest typing indicator message only
+        return messages.last { message in
+            if case .isTyping = message.messageKind {
+                return true
+            }
+            return false
+        }
+    }
+    
     func groupedMessagesByDate(messages: [Message]) -> [(date: Date, messages: [Message])] {
-        let grouped = Dictionary(grouping: messages) { message in
+        // Exclude typing indicator messages from date grouping
+        let filteredMessages = messages.filter { message in
+            if case .isTyping = message.messageKind {
+                return false
+            }
+            return true
+        }
+
+        let grouped = Dictionary(grouping: filteredMessages) { message in
             Calendar.current.startOfDay(for: message.date)
         }
+
         return grouped
             .map { ($0.key, $0.value) }
             .sorted { $0.0 > $1.0 }
