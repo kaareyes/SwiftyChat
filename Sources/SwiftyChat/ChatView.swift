@@ -109,6 +109,8 @@ public struct ChatView<Message: ChatMessage, User: ChatUser>: View {
                                     .modifier(MessageHorizontalSpaceModifier(messageKind: message.messageKind, isSender: message.isSender))
                                     .modifier(CellEdgeInsetsModifier(isSender: message.isSender))
                                     .id(message.id)
+                                    .rotationEffect(Angle(degrees: 180)).scaleEffect(x:  -1.0, y: 1.0, anchor: .center)
+
                             }
                             ForEach(groupedMessagesByDate(messages: messages), id: \.date) { group in
                                 
