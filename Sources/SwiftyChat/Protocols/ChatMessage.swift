@@ -16,7 +16,8 @@ public protocol ChatMessage: Identifiable {
     
     /// Type of message
     var messageKind: ChatMessageKind { get }
-    
+    /// Users who have seen this message (for read receipts UI)
+    var seenRecipients: [SeenAvatarUser]? { get }
     /// To determine if user is the current user to properly align UI.
     var isSender: Bool { get }
     var status: SendStatus { get }

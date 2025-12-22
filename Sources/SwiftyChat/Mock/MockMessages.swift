@@ -90,6 +90,7 @@ public struct MockMessages {
         public var date: Date
         public var status: SendStatus
         public var mediaId: String?
+        public var seenRecipients : [SeenAvatarUser]?
 
         public init(
             objectId : String = UUID().uuidString,
@@ -99,7 +100,8 @@ public struct MockMessages {
             date: Date = .init(),
             status : SendStatus = .sent,
             messageUUID : String,
-            mediaId: String? = nil
+            mediaId: String? = nil,
+            seenRecipients : [SeenAvatarUser]? = nil
         ) {
             self.objectId = objectId
             self.user = user
@@ -109,6 +111,7 @@ public struct MockMessages {
             self.status = status
             self.messageUUID = messageUUID
             self.mediaId = mediaId
+            self.seenRecipients = seenRecipients
         }
     }
     
@@ -151,7 +154,6 @@ public struct MockMessages {
     
     public static var chatbot: ChatUserItem = .init(
         userName: "Chatbot", objectId: UUID().uuidString,
-        //        avatar: #imageLiteral(resourceName: "avatar")
         avatarURL: URL(string: "https://3.bp.blogspot.com/-vO7C5BPCaCQ/WigyjG6Q8lI/AAAAAAAAfyQ/1tobZMMwZ2YEI0zx5De7kD31znbUAth0gCLcBGAs/s200/TOMI_avatar_full.png")
     )
     

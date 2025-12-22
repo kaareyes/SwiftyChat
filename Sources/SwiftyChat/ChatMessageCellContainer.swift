@@ -256,9 +256,8 @@ internal struct ChatMessageCellContainer<Message: ChatMessage>: View {
                             )
                         }
                         reactionButtonView
-                        if isFollowUP {
-                            followupbutton
-                        }
+                        followupbutton
+
                         
                     }
                     .padding(.horizontal, 12)

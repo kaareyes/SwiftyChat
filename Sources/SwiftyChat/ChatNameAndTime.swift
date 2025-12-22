@@ -14,92 +14,100 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
 
     public var body: some View {
         Group {
-            HStack(alignment: .center, spacing : 5){
-                if !message.isSender {
-                    VStack(alignment: .leading, spacing: 5){
-                        HStack(alignment: .center, spacing: 5){
-                            timeStamp
-                            actionStatus
-
-
+            VStack(spacing:0) {
+                HStack(alignment: .center, spacing : 5){
+                    if !message.isSender {
+                        VStack(alignment: .leading, spacing: 5){
+                            HStack(alignment: .center, spacing: 5){
+                                timeStamp
+                                actionStatus
+                            }
                         }
-                    }
-                    
-              
-                }else{
-                    
-                    VStack(alignment: .leading, spacing: 5){
-                        HStack(alignment: .center, spacing: 5){
-                            switch message.status {
-                            case .failed:
-                                Group {
-                                    Text("Re-Send")
+                        
+                    }else{
+                        
+                        VStack(alignment: .leading, spacing: 5){
+                            HStack(alignment: .center, spacing: 5){
+                                switch message.status {
+                                case .failed:
+                                    Group {
+                                        Text("Re-Send")
+                                            .font(.system(size: 10))
+                                            .fontWeight(.medium)
+                                            .foregroundColor(.red)
+                                            .italic()
+                                        Image(systemName: "arrow.counterclockwise.circle")
+                                            .font(.system(size: 12))
+                                            .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
+                                            .foregroundColor(.red)
+                                    }
+                                    .onTapGesture {
+                                        self.tappedResendAction(message)
+                                    }
+                                    
+                                case .sending:
+                                    Text("Sending... ")
                                         .font(.system(size: 10))
                                         .fontWeight(.medium)
-                                        .foregroundColor(.red)
+                                        .foregroundColor(.gray)
                                         .italic()
-                                    Image(systemName: "arrow.counterclockwise.circle")
-                                        .font(.system(size: 12))
+                                    Image(systemName: "paperplane")
+                                        .font(.system(size: 10))
                                         .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                                        .foregroundColor(.red)
-                                }
-                                .onTapGesture {
-                                    self.tappedResendAction(message)
-                                }
-                                
-                            case .sending:
-                                Text("Sending... ")
-                                    .font(.system(size: 10))
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.gray)
-                                    .italic()
-                                Image(systemName: "paperplane")
-                                    .font(.system(size: 10))
-                                    .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                                    .foregroundColor(.gray)
-                                actionStatus
-                            case .sent:
-                                
-                                switch message.messageKind {
-                                case .text(_, _,_, _,  _, let actionItemStatus,let reactions,let isFollowUP),
-                                    .image(_, _,_, _, let actionItemStatus,let reactions,let isFollowUP),
-                                    .imageText(_, _,_, _, _, _, let actionItemStatus,let reactions,let isFollowUP),
-                                    .video(_, _,_, _, let actionItemStatus,let reactions,let isFollowUP),
-                                    .videoText(_, _,_, _, _, _, let actionItemStatus,let reactions,let isFollowUP),
-                                    .reply(_, _,_, _, _, let actionItemStatus,let reactions,let isFollowUP),
-                                    .pdf(_, _,_, _, _, _, _, let actionItemStatus,let reactions,let isFollowUP),
-                                    .audio(_, _,_, _, let actionItemStatus,let reactions,let isFollowUP)
+                                        .foregroundColor(.gray)
+                                    actionStatus
+                                case .sent:
                                     
-                                    :
-                                    if let actionItemStatus = actionItemStatus {
-                                        timeStamp
-                                        Text(actionItemStatus.body.uppercased())
-                                            .foregroundColor(actionItemStatus.foregroundColor)
-                                            .font(.system(size: 10))
-                                            .fontWeight(.regular)
-                                        Image(systemName: actionItemStatus.logo)
-                                            .font(.system(size: 10))
-                                            .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
-                                            .foregroundColor(actionItemStatus.foregroundColor)
-                                            .padding(.horizontal,10)
+                                    switch message.messageKind {
+                                    case .text(_, _,_, _,  _, let actionItemStatus,let reactions,let isFollowUP),
+                                        .image(_, _,_, _, let actionItemStatus,let reactions,let isFollowUP),
+                                        .imageText(_, _,_, _, _, _, let actionItemStatus,let reactions,let isFollowUP),
+                                        .video(_, _,_, _, let actionItemStatus,let reactions,let isFollowUP),
+                                        .videoText(_, _,_, _, _, _, let actionItemStatus,let reactions,let isFollowUP),
+                                        .reply(_, _,_, _, _, let actionItemStatus,let reactions,let isFollowUP),
+                                        .pdf(_, _,_, _, _, _, _, let actionItemStatus,let reactions,let isFollowUP),
+                                        .audio(_, _,_, _, let actionItemStatus,let reactions,let isFollowUP)
+                                        
+                                        :
+                                        if let actionItemStatus = actionItemStatus {
+                                            timeStamp
+                                            Text(actionItemStatus.body.uppercased())
+                                                .foregroundColor(actionItemStatus.foregroundColor)
+                                                .font(.system(size: 10))
+                                                .fontWeight(.regular)
+                                            Image(systemName: actionItemStatus.logo)
+                                                .font(.system(size: 10))
+                                                .frame(maxWidth: 8, maxHeight: 8,alignment: .center)
+                                                .foregroundColor(actionItemStatus.foregroundColor)
+                                                .padding(.horizontal,10)
 
-                                    }else{
+                                        }else{
+                                            sentNormalStatus
+                                        }
+
+                                    default:
                                         sentNormalStatus
                                     }
-
-                                default:
-                                    sentNormalStatus
                                 }
+
                             }
 
                         }
-                    }
 
+                    }
+                }.frame(maxWidth: .infinity, alignment: message.isSender ?  .trailing : .leading)
+                if let seenRecipients = message.seenRecipients, !seenRecipients.isEmpty {
+                    HStack {
+                        Spacer()
+                        SeenAvatarsView(users: seenRecipients)
+                            .padding(.trailing, 10)
+                    }
                 }
-            }.frame(maxWidth: .infinity, alignment: message.isSender ?  .trailing : .leading)
+            }
+
         }
         .padding(message.isSender ? .trailing : .leading ,message.isSender ? 10 : 45)
-        .padding(.bottom,20)
+        .padding(.bottom, (message.seenRecipients?.isEmpty ?? true) ? 10 : 0)
     }
     
     private var timeStamp : some View {
