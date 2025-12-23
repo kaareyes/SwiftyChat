@@ -101,6 +101,7 @@ public struct ChatNameAndTime<Message: ChatMessage>: View {
                         Spacer()
                         SeenAvatarsView(users: seenRecipients)
                             .padding(.trailing, 10)
+                            .padding(.top, 5)
                     }
                 }
             }
